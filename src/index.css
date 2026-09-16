@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+/* ── Custom fonts from Figma ──────────────────────────────── */
+@font-face {
+  font-family: "Irish Grover:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/IrishGrover-Regular_1") format("woff2");
+}
+@font-face {
+  font-family: "Jaldi:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/Jaldi-Regular_1") format("woff2");
+}
+@font-face {
+  font-family: "JejuGothic:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/JejuGothic_1") format("woff2");
+}
+
+/* ── Global scrollbar removal ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: #d0d0d0;
+  font-family: 'Outfit', sans-serif;
+  overscroll-behavior: none;
+}
+
+/* ── Utility classes ──────────────────────────────────────── */
+.brand-font  { font-family: "Irish Grover:Regular", serif; }
+.body-font   { font-family: "Jaldi:Regular", sans-serif; }
+.heading-font{ font-family: "JejuGothic:Regular", sans-serif; }
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50%       { transform: translateY(-6px); opacity: 1; }
+}
+@keyframes ping {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.15; }
+  100% { transform: translate(-50%,-50%) scale(1.6); opacity: 0; }
+}
+
+.fade-in  { animation: fadeInUp 0.35s ease forwards; }
+.slide-up { animation: slideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* ── Range input ──────────────────────────────────────────── */
+input[type="range"] { accent-color: #2e4a7a; cursor: pointer; }
+
+/* ── Map iframe border reset ──────────────────────────────── */
+iframe { border: 0; display: block; }

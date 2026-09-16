@@ -1,0 +1,10 @@
+{
+  "description": "Discover safe and affordable rental options in Phnom Penh with user reviews, detailed listings, and convenient payment options tailored for students.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
