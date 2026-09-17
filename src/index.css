@@ -1,25 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 @import 'tailwindcss';
-
-/* ── Custom fonts from Figma ──────────────────────────────── */
-@font-face {
-  font-family: "Irish Grover:Regular";
-  font-style: normal;
-  font-weight: 400;
-  src: url("https://static.figma.com/font/IrishGrover-Regular_1") format("woff2");
-}
-@font-face {
-  font-family: "Jaldi:Regular";
-  font-style: normal;
-  font-weight: 400;
-  src: url("https://static.figma.com/font/Jaldi-Regular_1") format("woff2");
-}
-@font-face {
-  font-family: "JejuGothic:Regular";
-  font-style: normal;
-  font-weight: 400;
-  src: url("https://static.figma.com/font/JejuGothic_1") format("woff2");
-}
 
 /* ── Global scrollbar removal ─────────────────────────────── */
 *,
@@ -45,23 +25,49 @@ html, body, #root {
 
 body {
   background: #d0d0d0;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
   overscroll-behavior: none;
 }
 
-/* ── Utility classes ──────────────────────────────────────── */
-.brand-font  { font-family: "Irish Grover:Regular", serif; }
-.body-font   { font-family: "Jaldi:Regular", sans-serif; }
-.heading-font{ font-family: "JejuGothic:Regular", sans-serif; }
+/* ── Font utility classes — all Poppins ──────────────────── */
+.brand-font   { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; }
+.heading-font { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; }
+.body-font    { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 400; }
 
-/* ── Animations ───────────────────────────────────────────── */
+/* ── Brand tokens ─────────────────────────────────────────── */
+:root {
+  --navy: #173A5E;
+  --gold: #F5C518;
+  --gold-light: #FBD34D;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -74,12 +80,95 @@ body {
   0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.15; }
   100% { transform: translate(-50%,-50%) scale(1.6); opacity: 0; }
 }
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+@keyframes navDot {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
 
-.fade-in  { animation: fadeInUp 0.35s ease forwards; }
-.slide-up { animation: slideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+/* ── Animation utility classes ────────────────────────────── */
+.fade-in        { animation: fadeIn 0.30s ease both; }
+.fade-in-fast   { animation: fadeIn 0.18s ease both; }
+.slide-up       { animation: slideUp 0.38s var(--ease-out-expo) both; }
+.slide-in-right { animation: slideInRight 0.32s var(--ease-out-expo) both; }
+.slide-in-left  { animation: slideInLeft 0.32s var(--ease-out-expo) both; }
+.scale-in       { animation: scaleIn 0.28s var(--ease-spring) both; }
+
+/* ── Screen transition wrapper ────────────────────────────── */
+.screen-enter {
+  animation: fadeIn 0.22s ease both;
+}
+.screen-enter-slide {
+  animation: fadeIn 0.22s ease both;
+}
+.overlay-enter {
+  animation: overlayIn 0.28s var(--ease-out-expo) both;
+}
+@keyframes overlayIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Staggered list children ──────────────────────────────── */
+.stagger-list > * {
+  opacity: 0;
+  animation: fadeIn 0.28s ease both;
+}
+.stagger-list > *:nth-child(1)  { animation-delay: 0.04s; }
+.stagger-list > *:nth-child(2)  { animation-delay: 0.08s; }
+.stagger-list > *:nth-child(3)  { animation-delay: 0.12s; }
+.stagger-list > *:nth-child(4)  { animation-delay: 0.16s; }
+.stagger-list > *:nth-child(5)  { animation-delay: 0.20s; }
+.stagger-list > *:nth-child(6)  { animation-delay: 0.24s; }
+.stagger-list > *:nth-child(7)  { animation-delay: 0.28s; }
+.stagger-list > *:nth-child(8)  { animation-delay: 0.32s; }
+.stagger-list > *:nth-child(9)  { animation-delay: 0.36s; }
+.stagger-list > *:nth-child(10) { animation-delay: 0.40s; }
+
+/* ── Card press / hover feel ──────────────────────────────── */
+.card-press {
+  transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.card-press:active {
+  transform: scale(0.975);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ── Button base transitions ──────────────────────────────── */
+button, a {
+  transition: opacity 0.15s ease, transform 0.15s var(--ease-spring);
+}
+
+/* ── Bottom nav active dot ────────────────────────────────── */
+.nav-dot {
+  display: block;
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--navy);
+  transform-origin: center;
+  animation: navDot 0.28s var(--ease-spring) both;
+}
+
+/* ── Skeleton shimmer ──────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ── Smooth scroll areas ───────────────────────────────────── */
+.scroll-smooth-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
 
 /* ── Range input ──────────────────────────────────────────── */
-input[type="range"] { accent-color: #2e4a7a; cursor: pointer; }
+input[type="range"] { accent-color: #173A5E; cursor: pointer; }
 
 /* ── Map iframe border reset ──────────────────────────────── */
 iframe { border: 0; display: block; }

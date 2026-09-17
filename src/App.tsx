@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { LISTINGS, SAMPLE_BOOKINGS, type Listing, type BookingRecord, type AccomType } from "./data";
+import phnomPenhBg from "./imports/independancemonument.jpg";
+import jomrorkLogo from "./imports/image-1.png";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const IC = {
   Home: ({ on }: { on?: boolean }) => (
-    <svg viewBox="0 0 24 24" fill={on ? "#2e4a7a" : "none"} stroke={on ? "#2e4a7a" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
+    <svg viewBox="0 0 24 24" fill={on ? "#173A5E" : "none"} stroke={on ? "#173A5E" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
       <path d="M3 12L12 3l9 9" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   Calendar: ({ on }: { on?: boolean }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke={on ? "#2e4a7a" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
+    <svg viewBox="0 0 24 24" fill="none" stroke={on ? "#173A5E" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
       <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" strokeLinecap="round" /><line x1="8" y1="2" x2="8" y2="6" strokeLinecap="round" /><line x1="3" y1="10" x2="21" y2="10" />
     </svg>
   ),
@@ -20,12 +22,12 @@ const IC = {
     </svg>
   ),
   Msg: ({ on }: { on?: boolean }) => (
-    <svg viewBox="0 0 24 24" fill={on ? "#2e4a7a" : "none"} stroke={on ? "#2e4a7a" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
+    <svg viewBox="0 0 24 24" fill={on ? "#173A5E" : "none"} stroke={on ? "#173A5E" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   User: ({ on }: { on?: boolean }) => (
-    <svg viewBox="0 0 24 24" fill={on ? "#2e4a7a" : "none"} stroke={on ? "#2e4a7a" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
+    <svg viewBox="0 0 24 24" fill={on ? "#173A5E" : "none"} stroke={on ? "#173A5E" : "#9ca3af"} strokeWidth={1.8} className="w-6 h-6">
       <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeLinecap="round" /><circle cx="12" cy="7" r="4" />
     </svg>
   ),
@@ -234,6 +236,53 @@ const IC = {
   ),
 };
 
+// ─── Brand components ─────────────────────────────────────────────────────────
+const PP = "'Poppins','Helvetica Neue',Arial,sans-serif";
+
+function JomrorkIcon({ size = 40, glow = false }: { size?: number; glow?: boolean }) {
+  const r = Math.round(size * 0.22);
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: r, overflow: "hidden",
+      flexShrink: 0, display: "block",
+      boxShadow: glow
+        ? "0 0 22px 8px rgba(251,211,77,0.55), 0 0 8px 2px rgba(245,197,24,0.4)"
+        : "none",
+    }}>
+      <img src={jomrorkLogo} alt="Jomrork" style={{ width: "100%", height: "100%", display: "block", objectFit: "cover" }} />
+    </div>
+  );
+}
+
+function JomrorkLogo({ onDark = true, size = 38, glow = false }: { onDark?: boolean; size?: number; glow?: boolean }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 9, flexShrink: 0 }}>
+      <JomrorkIcon size={size} glow={glow} />
+      <span style={{
+        fontFamily: PP, fontWeight: 800,
+        fontSize: Math.round(size * 0.74),
+        color: onDark ? "#ffffff" : "#173A5E",
+        letterSpacing: "-0.01em", lineHeight: 1,
+      }}>Jomrork</span>
+    </div>
+  );
+}
+
+// Header for Bookings/Saved/Messages/Profile — title only, no logo
+function TabHeader({ title, subtitle, right }: { title: string; subtitle?: string; right?: React.ReactNode }) {
+  return (
+    <div className="bg-[#173A5E] pt-14 pb-4 px-4 shrink-0">
+      <div className="flex items-center justify-between">
+        <p style={{ fontFamily: PP, fontWeight: 700, fontSize: 20, color: "#fff", lineHeight: 1.15 }}>{title}</p>
+        {right ?? <div className="w-9" />}
+      </div>
+      {subtitle && (
+        <p className="text-white/55 text-xs mt-0.5">{subtitle}</p>
+      )}
+    </div>
+  );
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function Stars({ n, lg }: { n: number; lg?: boolean }) {
   return (
@@ -247,16 +296,16 @@ type TagColor = "gray" | "navy" | "green" | "amber" | "red" | "outline";
 function Tag({ label, color = "gray" }: { label: string; color?: TagColor }) {
   const cls: Record<TagColor, string> = {
     gray:    "bg-gray-100 text-gray-600",
-    navy:    "bg-[#2e4a7a] text-white",
+    navy:    "bg-[#173A5E] text-white",
     green:   "bg-green-100 text-green-700",
-    amber:   "bg-amber-100 text-amber-700",
+    amber:   "bg-[#FEF4B0] text-[#B08010]",
     red:     "bg-red-100 text-red-600",
     outline: "border border-gray-300 text-gray-500 bg-white",
   };
   return <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cls[color]}`}>{label}</span>;
 }
 
-function Avatar({ name, size = "md", bg = "#2e4a7a" }: { name: string; size?: "sm" | "md" | "lg"; bg?: string }) {
+function Avatar({ name, size = "md", bg = "#173A5E" }: { name: string; size?: "sm" | "md" | "lg"; bg?: string }) {
   const sz = { sm: "w-7 h-7 text-xs", md: "w-9 h-9 text-sm", lg: "w-12 h-12 text-base" };
   return (
     <div className={`rounded-full flex items-center justify-center text-white font-bold shrink-0 ${sz[size]}`} style={{ background: bg }}>
@@ -276,10 +325,10 @@ function ListingCard({ l, onPress, saved, onSave, isUserBooked }: {
       onClick={onPress}
       role="button" tabIndex={0}
       onKeyDown={e => e.key === "Enter" && onPress()}
-      className="w-full text-left bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+      className="w-full text-left bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm cursor-pointer card-press"
     >
-      <div className="relative h-44 bg-gray-200">
-        <img src={l.images[0]} alt={l.title} className="w-full h-full object-cover" />
+      <div className="relative h-44 bg-gray-200 overflow-hidden">
+        <img src={l.images[0]} alt={l.title} className="w-full h-full object-cover" style={{ transition: "transform 0.4s ease", }} onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")} onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
         {/* Verified + Heart */}
@@ -319,7 +368,7 @@ function ListingCard({ l, onPress, saved, onSave, isUserBooked }: {
             </p>
           </div>
           <div className="text-right shrink-0">
-            <p className="font-bold text-[#2e4a7a] text-base leading-tight">${l.price}</p>
+            <p className="font-bold text-[#173A5E] text-base leading-tight">${l.price}</p>
             <p className="text-[10px] text-gray-400">/month</p>
           </div>
         </div>
@@ -351,7 +400,7 @@ function SortBar({ sort, onChange }: { sort: SortOpt; onChange: (s: SortOpt) => 
       </div>
       {opts.map(([v, label]) => (
         <button key={v} onClick={() => onChange(sort === v ? "none" : v)}
-          className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors active:scale-95 ${sort === v ? "bg-[#2e4a7a] text-white border-[#2e4a7a]" : "bg-white text-gray-600 border-gray-200"}`}>
+          className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors active:scale-95 ${sort === v ? "bg-[#173A5E] text-white border-[#173A5E]" : "bg-white text-gray-600 border-gray-200"}`}>
           {label}
         </button>
       ))}
@@ -380,44 +429,45 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full relative overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #1e3a6e 0%, #2e4a7a 50%, #3d6199 100%)" }}>
+      style={{ background: "linear-gradient(160deg, #0f2540 0%, #173A5E 55%, #1c4570 100%)" }}>
 
-      {/* Animated rings */}
+      {/* Animated rings — gold tint */}
       {[1,2,3].map(i => (
-        <div key={i} className="absolute rounded-full border border-white/8 pointer-events-none"
+        <div key={i} className="absolute rounded-full pointer-events-none"
           style={{
             width: i * 200, height: i * 200,
             top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
+            border: `1px solid rgba(251,211,77,${0.07 - i * 0.01})`,
             animation: `ping ${1.8 + i * 0.4}s ease-out ${i * 0.3}s infinite`,
-            opacity: 0.15,
           }} />
       ))}
 
-      {/* Glow blob */}
-      <div className="absolute w-64 h-64 rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)", top:"30%", left:"50%", transform:"translate(-50%,-50%)" }} />
+      {/* Gold glow */}
+      <div className="absolute w-72 h-72 rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(251,211,77,0.10) 0%, transparent 70%)", top:"50%", left:"50%", transform:"translate(-50%,-50%)" }} />
 
       {/* Logo + wordmark */}
       <div className="relative z-10 flex flex-col items-center"
         style={{ transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1)", opacity: stage >= 1 ? 1 : 0, transform: stage >= 1 ? "translateY(0)" : "translateY(28px)" }}>
 
-        <div className="w-24 h-24 rounded-[28px] flex items-center justify-center mb-5 shadow-2xl"
-          style={{ background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.25)", backdropFilter: "blur(8px)" }}>
-          <span className="brand-font text-white text-4xl">J</span>
+        <div className="mb-5">
+          <JomrorkIcon size={88} />
         </div>
 
-        <h1 className="brand-font text-white tracking-wide" style={{ fontSize: "clamp(2.5rem,8vw,3.5rem)", lineHeight:1 }}>Jomrork</h1>
-        <p className="text-white/50 text-[11px] mt-2 tracking-[0.2em] uppercase">Safe Student Housing · Phnom Penh</p>
+        <span style={{ fontFamily: PP, fontWeight: 800, fontSize: "clamp(2.4rem,8vw,3.2rem)", lineHeight: 1, color: "white", letterSpacing: "-0.01em" }}>
+          Jomrork
+        </span>
+        <p className="text-white/45 text-[11px] mt-2 tracking-[0.2em] uppercase">You Study. We House.</p>
       </div>
 
-      {/* Tagline */}
+      {/* Loading dots — gold */}
       <div className="absolute bottom-24 z-10 flex flex-col items-center gap-4"
         style={{ transition: "opacity 0.5s ease 0.4s", opacity: stage >= 2 ? 1 : 0 }}>
         <div className="flex gap-1.5">
           {[0,1,2].map(i => (
-            <div key={i} className="rounded-full bg-white"
-              style={{ width: 6, height: 6, animation: `bounce 1.1s ease-in-out ${i * 0.18}s infinite` }} />
+            <div key={i} className="rounded-full"
+              style={{ width: 6, height: 6, background: "#FBD34D", animation: `bounce 1.1s ease-in-out ${i * 0.18}s infinite` }} />
           ))}
         </div>
         <p className="text-white/40 text-[10px] tracking-widest uppercase">Finding your home…</p>
@@ -443,16 +493,16 @@ function SuccessModal({ receiptNo, pointsEarned, onGoHome, onGoBookings }: {
           <p className="text-sm font-bold text-gray-800">{receiptNo}</p>
         </div>
         {/* Points earned */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 mb-5 flex items-center justify-center gap-2">
+        <div className="bg-[#FFFBDD] border border-[#F0D94D] rounded-xl px-4 py-2.5 mb-5 flex items-center justify-center gap-2">
           <IC.CoinLg />
           <div>
-            <p className="text-xs text-amber-700 font-semibold">Points Earned</p>
-            <p className="text-base font-black text-amber-800">+{pointsEarned} pts</p>
+            <p className="text-xs text-[#B08010] font-semibold">Points Earned</p>
+            <p className="text-base font-black text-[#8C6408]">+{pointsEarned} pts</p>
           </div>
         </div>
         <div className="space-y-2.5">
           <button onClick={onGoBookings}
-            className="w-full bg-[#2e4a7a] text-white font-bold py-3 rounded-2xl text-sm active:scale-95 transition-transform">
+            className="w-full bg-[#173A5E] text-white font-bold py-3 rounded-full text-sm active:scale-95 transition-transform">
             See Receipt
           </button>
           <button onClick={onGoHome}
@@ -467,6 +517,43 @@ function SuccessModal({ receiptNo, pointsEarned, onGoHome, onGoBookings }: {
 
 // ─── HOME SCREEN ──────────────────────────────────────────────────────────────
 type CategoryFilter = { kind: "type" | "university" | "area"; value: string };
+
+const HOME_PREVIEW_COUNT = 10;
+
+function HomeAllListings({ onListing, savedIds, onSave, bookedByUser }: {
+  onListing: (id: string) => void; savedIds: Set<string>;
+  onSave: (id: string) => void; bookedByUser: Set<string>;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? LISTINGS : LISTINGS.slice(0, HOME_PREVIEW_COUNT);
+  return (
+    <div className="px-4 pt-5 pb-4">
+      <div className="flex items-center justify-between mb-3">
+        <p className="heading-font text-gray-900 text-[15px] font-bold">All Listings</p>
+        <span className="text-xs text-gray-400">{LISTINGS.length} available</span>
+      </div>
+      <div className="space-y-3 stagger-list">
+        {visible.map(l => (
+          <ListingCard key={l.id} l={l} onPress={() => onListing(l.id)}
+            saved={savedIds.has(l.id)} onSave={e => { e.stopPropagation(); onSave(l.id); }}
+            isUserBooked={bookedByUser.has(l.id)} />
+        ))}
+      </div>
+      {!showAll && LISTINGS.length > HOME_PREVIEW_COUNT && (
+        <button onClick={() => setShowAll(true)}
+          className="mt-4 w-full py-3 rounded-full border border-[#173A5E] text-[#173A5E] text-sm font-semibold active:bg-[#173A5E]/5 transition-colors">
+          Show more
+        </button>
+      )}
+      {showAll && (
+        <button onClick={() => setShowAll(false)}
+          className="mt-4 w-full py-3 rounded-2xl border border-gray-200 text-gray-500 text-sm font-semibold active:bg-gray-50 transition-colors">
+          Show less
+        </button>
+      )}
+    </div>
+  );
+}
 
 function HomeScreen({ onListing, onSearch, onCategory, savedIds, onSave, bookedByUser, isGuest }: {
   onListing: (id: string) => void;
@@ -500,13 +587,10 @@ function HomeScreen({ onListing, onSearch, onCategory, savedIds, onSave, bookedB
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
       {/* Header */}
-      <div className="bg-[#2e4a7a] pt-14 pb-4 px-4 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-4 px-4 shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <div>
-            <h1 className="brand-font text-white text-2xl leading-tight">Jomrork</h1>
-            <p className="text-white/55 text-xs">Student housing · Phnom Penh</p>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+          <JomrorkLogo size={34} onDark glow />
+          <div className="w-9 h-9 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
             {isGuest ? (
               <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth={1.8} className="w-5 h-5">
                 <circle cx="12" cy="8" r="4" />
@@ -525,14 +609,14 @@ function HomeScreen({ onListing, onSearch, onCategory, savedIds, onSave, bookedB
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-2">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch pb-2">
 
         {/* Ad Banner — only on the banner strip (not listing cards) */}
         <div className="px-4 pt-4">
           <button onClick={() => onListing(sponsored[adIdx].id)}
             className="relative w-full h-40 rounded-2xl overflow-hidden shadow-sm active:scale-[0.98] transition-transform">
             <img src={sponsored[adIdx].images[0]} alt="ad" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1e3359]/85 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#173A5E]/85 to-transparent" />
             <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-white/90 border border-gray-300 rounded px-1.5 py-0.5">
               <span className="text-[9px] font-black text-gray-500 tracking-wider">AD</span>
             </div>
@@ -582,7 +666,7 @@ function HomeScreen({ onListing, onSearch, onCategory, savedIds, onSave, bookedB
             {uniList.map(({ u, count }) => (
               <button key={u} onClick={() => onCategory({ kind: "university", value: u })}
                 className="shrink-0 flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-3 py-2.5 shadow-sm active:bg-gray-50 active:scale-95 transition-all">
-                <div className="w-7 h-7 rounded-xl bg-[#2e4a7a]/10 flex items-center justify-center text-[#2e4a7a]">
+                <div className="w-7 h-7 rounded-xl bg-[#173A5E]/10 flex items-center justify-center text-[#173A5E]">
                   <IC.GradCap />
                 </div>
                 <div className="text-left">
@@ -616,19 +700,7 @@ function HomeScreen({ onListing, onSearch, onCategory, savedIds, onSave, bookedB
         </div>
 
         {/* ── All Listings ───────────────────────────── */}
-        <div className="px-4 pt-5 pb-4">
-          <div className="flex items-center justify-between mb-3">
-            <p className="heading-font text-gray-900 text-[15px] font-bold">All Listings</p>
-            <span className="text-xs text-gray-400">{LISTINGS.length} available</span>
-          </div>
-          <div className="space-y-3">
-            {LISTINGS.map(l => (
-              <ListingCard key={l.id} l={l} onPress={() => onListing(l.id)}
-                saved={savedIds.has(l.id)} onSave={e => { e.stopPropagation(); onSave(l.id); }}
-                isUserBooked={bookedByUser.has(l.id)} />
-            ))}
-          </div>
-        </div>
+        <HomeAllListings onListing={onListing} savedIds={savedIds} onSave={onSave} bookedByUser={bookedByUser} />
 
       </div>
     </div>
@@ -663,7 +735,7 @@ function CategoryScreen({ filter, onBack, onListing, savedIds, onSave, bookedByU
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-14 pb-4 px-4 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-4 px-4 shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25">
             <IC.Back />
@@ -673,7 +745,7 @@ function CategoryScreen({ filter, onBack, onListing, savedIds, onSave, bookedByU
             <p className="text-white/55 text-xs">{subtitle}</p>
           </div>
           <button onClick={() => setShowFilter(s => !s)}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${showFilter ? "bg-white text-[#2e4a7a]" : "bg-white/15 text-white"}`}>
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${showFilter ? "bg-white text-[#173A5E]" : "bg-white/15 text-white"}`}>
             <IC.Filter />
           </button>
         </div>
@@ -692,7 +764,7 @@ function CategoryScreen({ filter, onBack, onListing, savedIds, onSave, bookedByU
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4 space-y-3">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-3 pb-4 space-y-3 stagger-list">
         {results.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-center">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-gray-400">
@@ -736,7 +808,7 @@ function SearchOverlay({ onClose, onListing, savedIds, onSave, bookedByUser }: {
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
       {/* Search header — same top clearance as other screens, never reaches Dynamic Island */}
-      <div className="bg-[#2e4a7a] pt-10 pb-3 px-4 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-3 px-4 shrink-0">
         <p className="text-white/60 text-xs mb-2">Search accommodations</p>
         <div className="flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 bg-white rounded-2xl px-3 py-2.5 shadow-sm">
@@ -758,7 +830,7 @@ function SearchOverlay({ onClose, onListing, savedIds, onSave, bookedByUser }: {
         <div className="flex gap-1.5 overflow-x-auto pb-0.5" style={{scrollbarWidth:"none"}}>
           {types.map(t => (
             <button key={t} onClick={() => setTypeFilter(t)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${typeFilter===t ? "bg-[#2e4a7a] text-white border-[#2e4a7a]" : "bg-gray-50 text-gray-600 border-gray-200"}`}>
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${typeFilter===t ? "bg-[#173A5E] text-white border-[#173A5E]" : "bg-gray-50 text-gray-600 border-gray-200"}`}>
               {t}
             </button>
           ))}
@@ -769,13 +841,13 @@ function SearchOverlay({ onClose, onListing, savedIds, onSave, bookedByUser }: {
             <span className="text-[10px] text-gray-400 shrink-0">≤${maxPrice}</span>
             <input type="range" min={50} max={500} step={10} value={maxPrice}
               onChange={e => setMaxPrice(+e.target.value)}
-              className="flex-1 accent-[#2e4a7a] h-1 cursor-pointer" />
+              className="flex-1 accent-[#173A5E] h-1 cursor-pointer" />
           </div>
         </div>
       </div>
 
       {/* Results */}
-      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4 space-y-3">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-3 pb-4 space-y-3">
         <p className="text-xs text-gray-400">{results.length} listing{results.length!==1?"s":""} found</p>
         {results.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-center gap-2">
@@ -793,9 +865,10 @@ function SearchOverlay({ onClose, onListing, savedIds, onSave, bookedByUser }: {
 }
 
 // ─── LISTING DETAIL ───────────────────────────────────────────────────────────
-function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUser }: {
+function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUser, isGuest, onLogin }: {
   listingId: string; onBack: () => void; onBook: (id: string) => void;
   savedIds: Set<string>; onSave: (id: string) => void; bookedByUser: Set<string>;
+  isGuest: boolean; onLogin: () => void;
 }) {
   const l = LISTINGS.find(x => x.id === listingId)!;
   const [imgIdx, setImgIdx] = useState(0);
@@ -887,7 +960,7 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
             </div>
           </div>
           <div className="text-right shrink-0">
-            <p className="font-bold text-[#2e4a7a] text-xl">${l.price}</p>
+            <p className="font-bold text-[#173A5E] text-xl">${l.price}</p>
             <p className="text-gray-400 text-[10px]">/month</p>
           </div>
         </div>
@@ -897,15 +970,15 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
       <div className="bg-white border-b border-gray-200 flex shrink-0">
         {(["info","amenities","reviews","map"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 py-2.5 flex flex-col items-center gap-0.5 text-[10px] font-semibold capitalize transition-colors border-b-2 ${tab===t ? "border-[#2e4a7a] text-[#2e4a7a]" : "border-transparent text-gray-400"}`}>
-            <span className={tab===t ? "text-[#2e4a7a]" : "text-gray-400"}>{menuIcon(t)}</span>
+            className={`flex-1 py-2.5 flex flex-col items-center gap-0.5 text-[10px] font-semibold capitalize transition-colors border-b-2 ${tab===t ? "border-[#173A5E] text-[#173A5E]" : "border-transparent text-gray-400"}`}>
+            <span className={tab===t ? "text-[#173A5E]" : "text-gray-400"}>{menuIcon(t)}</span>
             {t}{t==="reviews"?` (${l.reviewCount})`:""}
           </button>
         ))}
       </div>
 
       {/* Tab content */}
-      <div className="flex-1 overflow-y-auto pb-2">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch pb-2">
 
         {tab === "info" && (
           <div className="px-4 pt-4 pb-4 space-y-3">
@@ -952,15 +1025,23 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
             <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
               <p className="font-bold text-gray-900 text-sm mb-3">Contact Landlord</p>
               <div className="flex items-center gap-3">
-                <Avatar name={l.landlordName} bg="#4b6cb7" />
+                <Avatar name={l.landlordName} bg="#173A5E" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-800 truncate">{l.landlordName}</p>
                   <p className="text-xs text-gray-500">{hasBooked ? l.landlordPhone : maskPhone(l.landlordPhone)}</p>
                 </div>
                 {hasBooked ? (
-                  <button className="flex items-center gap-1.5 bg-[#2e4a7a] text-white text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-transform">
-                    <IC.Phone />Call
-                  </button>
+                  <div className="flex gap-2">
+                    <button className="flex items-center gap-1.5 bg-[#173A5E]/10 text-[#173A5E] text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-transform">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Message
+                    </button>
+                    <button className="flex items-center gap-1.5 bg-[#173A5E] text-white text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-transform">
+                      <IC.Phone />Call
+                    </button>
+                  </div>
                 ) : (
                   <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400">
                     <IC.Lock />
@@ -968,16 +1049,16 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
                 )}
               </div>
               {!hasBooked && (
-                <div className="mt-2.5 flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+                <div className="mt-2.5 flex items-center gap-2 bg-[#FFFBDD] border border-[#F5E890] rounded-xl px-3 py-2">
                   <IC.Lock />
-                  <p className="text-xs text-amber-700">Complete a booking to see full contact details</p>
+                  <p className="text-xs text-[#B08010]">Complete a booking to see full contact details</p>
                 </div>
               )}
             </div>
 
-            <div className="bg-[#2e4a7a]/5 rounded-2xl p-4 border border-[#2e4a7a]/10">
-              <p className="font-bold text-[#2e4a7a] text-sm mb-2.5 flex items-center gap-1.5">
-                <IC.Shield color="#2e4a7a" />Safety & Trust
+            <div className="bg-[#173A5E]/5 rounded-2xl p-4 border border-[#173A5E]/10">
+              <p className="font-bold text-[#173A5E] text-sm mb-2.5 flex items-center gap-1.5">
+                <IC.Shield color="#173A5E" />Safety & Trust
               </p>
               <div className="grid grid-cols-2 gap-y-2 gap-x-3">
                 {["ID-verified landlord","In-person inspection done","Contract available","24/7 CCTV building","Background check done","Jomrork guarantee"].map(item => (
@@ -1030,7 +1111,7 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
           <div className="px-4 pt-4 pb-4 space-y-3">
             <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-5">
               <div className="text-center shrink-0">
-                <p className="text-4xl font-bold text-[#2e4a7a]">{l.rating}</p>
+                <p className="text-4xl font-bold text-[#173A5E]">{l.rating}</p>
                 <Stars n={l.rating} lg />
                 <p className="text-xs text-gray-400 mt-1">{l.reviewCount} reviews</p>
               </div>
@@ -1080,7 +1161,7 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
               <div className="p-3 border-t border-gray-100">
                 <p className="text-xs font-bold text-gray-800 flex items-center gap-1.5"><IC.PinSm />{l.area}</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">{l.address}</p>
-                <div className="mt-1.5 flex items-center gap-1 text-[#2e4a7a]">
+                <div className="mt-1.5 flex items-center gap-1 text-[#173A5E]">
                   <IC.GradCap />
                   <span className="text-[11px] font-medium">{l.distanceToUni} to {l.nearUni}</span>
                 </div>
@@ -1115,12 +1196,19 @@ function ListingDetail({ listingId, onBack, onBook, savedIds, onSave, bookedByUs
       <div className="bg-white border-t border-gray-200 px-4 pt-3 pb-7 shrink-0 flex items-center gap-3">
         <div>
           <p className="text-[10px] text-gray-400">Monthly rent</p>
-          <p className="font-bold text-[#2e4a7a] text-base">${l.price}/mo</p>
+          <p className="font-bold text-[#173A5E] text-base">${l.price}/mo</p>
         </div>
-        <button onClick={() => !isUnavailable && onBook(listingId)} disabled={isUnavailable}
-          className={`flex-1 font-bold py-3 rounded-2xl text-sm shadow-md active:scale-95 transition-transform ${isUnavailable ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#2e4a7a] text-white"}`}>
-          {isUnavailable ? "Unavailable" : "Book Now"}
-        </button>
+        {isGuest ? (
+          <button onClick={onLogin}
+            className="flex-1 font-bold py-3 rounded-full text-sm shadow-md bg-[#173A5E] text-white active:scale-95 transition-transform">
+            Log In to Book
+          </button>
+        ) : (
+          <button onClick={() => !isUnavailable && onBook(listingId)} disabled={isUnavailable}
+            className={`flex-1 font-bold py-3 rounded-full text-sm shadow-md active:scale-95 transition-transform ${isUnavailable ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#173A5E] text-white"}`}>
+            {isUnavailable ? "Unavailable" : "Book Now"}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -1144,7 +1232,7 @@ function ContractView({ listing, months, onAgree, onBack }: {
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 flex items-center gap-3 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-4 px-4 flex items-center gap-3 shrink-0">
         <button onClick={onBack} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25"><IC.Back /></button>
         <div>
           <p className="text-white font-bold text-base">Rental Agreement</p>
@@ -1153,10 +1241,10 @@ function ContractView({ listing, months, onAgree, onBack }: {
       </div>
 
       {/* Contract scroll area */}
-      <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 pt-4 pb-4">
+      <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="bg-[#2e4a7a] px-5 py-4 flex items-center gap-3">
+          <div className="bg-[#173A5E] px-5 py-4 flex items-center gap-3">
             <IC.Contract />
             <div>
               <p className="text-white font-bold text-sm">JOMRORK RENTAL AGREEMENT</p>
@@ -1186,10 +1274,10 @@ function ContractView({ listing, months, onAgree, onBack }: {
 
             <div>
               <p className="font-bold text-gray-900 mb-1">4. RENT & FEES</p>
-              <p>Monthly rent is fixed at <strong>${listing.price}/month</strong>, payable in advance on the 1st of each month through the Jomrork platform.</p>
-              <p className="mt-2">Additional charges: Electricity at ${listing.electricity}/kWh (estimated), Water at ${listing.water}/month (fixed).</p>
+              <p>The Tenant pays the <strong>first month's rent (${listing.price})</strong> and the <strong>security deposit (${listing.price * Math.ceil(months/12)})</strong> securely through the Jomrork app at the time of booking. All subsequent monthly rent payments are made directly to the Landlord.</p>
+              <p className="mt-2">Utility costs — including electricity (billed at the building rate, approx. ${listing.electricity}/kWh), water (approx. ${listing.water}/month), and any other utility or maintenance fees — are settled directly between the Tenant and the Landlord and are not collected through the Jomrork platform.</p>
               {listing.parking !== "No Parking" && listing.parking === "Paid" && (
-                <p className="mt-1">Parking: ${listing.parkingFee}/month.</p>
+                <p className="mt-1">Parking: ${listing.parkingFee}/month, payable to the Landlord.</p>
               )}
               <p className="mt-2">A security deposit of <strong>{Math.ceil(months/12)} month{Math.ceil(months/12)>1?"s":""} rent (${listing.price * Math.ceil(months/12)})</strong> is required for a {months}-month tenancy (1 month per 12-month period). The deposit will be refunded within 14 days of lease end, subject to property inspection.</p>
             </div>
@@ -1227,7 +1315,19 @@ function ContractView({ listing, months, onAgree, onBack }: {
 
             <div>
               <p className="font-bold text-gray-900 mb-1">9. JOMRORK PLATFORM</p>
-              <p>This agreement is facilitated through Jomrork. Jomrork charges a commission of 1.5% of monthly rent from the Landlord. No additional fees are charged to the Tenant beyond those stated above.</p>
+              <p>This agreement is facilitated through Jomrork. Jomrork charges a one-time commission of <strong>8–10% of the first month's rent</strong>, charged to the Landlord at the time of move-in. No fees whatsoever are charged to the Tenant beyond the rent and deposit stated in Section 4.</p>
+            </div>
+
+            {/* 48-hour refund callout */}
+            <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-4">
+              <div className="flex items-center gap-2 mb-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2} className="w-4 h-4 shrink-0">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <p className="font-bold text-green-800 text-sm">48-Hour Refund Protection</p>
+              </div>
+              <p className="text-green-800 text-xs leading-relaxed">Jomrork holds your first month's rent and security deposit securely — <strong>we do not release funds to the landlord until 48 hours after booking confirmation.</strong> Within this 48-hour window, you may cancel your booking for any reason and receive a <strong>full refund</strong>, no questions asked.</p>
+              <p className="text-green-700 text-xs mt-2 leading-relaxed">After 48 hours, the first month's rent is transferred to the landlord and the security deposit is held by Jomrork until your move-out inspection. Cancellations after 48 hours may forfeit the first month's rent. Contact <strong>support@jomrork.com</strong> to request a refund within the window.</p>
             </div>
 
             <div>
@@ -1254,8 +1354,8 @@ function ContractView({ listing, months, onAgree, onBack }: {
       {/* Agreement checkbox + CTA */}
       <div className="bg-white border-t border-gray-200 px-4 pt-3 pb-7 shrink-0 space-y-3">
         <button onClick={() => scrolled && setAgreed(v => !v)}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${scrolled ? "cursor-pointer" : "opacity-40 cursor-not-allowed"} ${agreed ? "border-[#2e4a7a] bg-[#2e4a7a]/5" : "border-gray-200 bg-gray-50"}`}>
-          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${agreed ? "bg-[#2e4a7a] border-[#2e4a7a]" : "border-gray-300"}`}>
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${scrolled ? "cursor-pointer" : "opacity-40 cursor-not-allowed"} ${agreed ? "border-[#173A5E] bg-[#173A5E]/5" : "border-gray-200 bg-gray-50"}`}>
+          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${agreed ? "bg-[#173A5E] border-[#173A5E]" : "border-gray-300"}`}>
             {agreed && <IC.Check color="white" />}
           </div>
           <span className="text-sm text-gray-700 text-left leading-snug">
@@ -1263,7 +1363,7 @@ function ContractView({ listing, months, onAgree, onBack }: {
           </span>
         </button>
         <button onClick={onAgree} disabled={!agreed}
-          className={`w-full font-bold py-3.5 rounded-2xl text-sm shadow-md active:scale-95 transition-transform ${agreed ? "bg-[#2e4a7a] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>
+          className={`w-full font-bold py-3.5 rounded-full text-sm shadow-md active:scale-95 transition-transform ${agreed ? "bg-[#173A5E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>
           I Agree &amp; Continue to Payment
         </button>
       </div>
@@ -1293,7 +1393,8 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
   const deposit = l.price * depositMultiplier;
   // User pays only first month + deposit upfront; remaining months paid monthly
   const totalNow = l.price + deposit;
-  const pointsEarned = l.price * months;
+  const ptPerMonth = l.price < 100 ? 25 : l.price < 150 ? 50 : 75;
+  const pointsEarned = ptPerMonth * months;
 
   const receiptNo = useRef("JMR-" + Math.floor(100000 + Math.random() * 900000)).current;
   const today = new Date().toLocaleDateString("en-US", { day:"numeric", month:"long", year:"numeric" });
@@ -1320,17 +1421,17 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
   if (step === "receipt") {
     return (
       <div className="flex flex-col h-full bg-[#fbfaf7]">
-        <div className="bg-[#2e4a7a] pt-12 pb-4 px-4 flex items-center justify-center shrink-0">
+        <div className="bg-[#173A5E] pt-12 pb-4 px-4 flex items-center justify-center shrink-0">
           <p className="text-white font-bold text-base">Payment Receipt</p>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-4">
+        <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-4">
           <div className="flex flex-col items-center">
             <IC.CheckCircle />
             <p className="text-gray-900 font-bold text-lg mt-3">Booking Confirmed!</p>
             <p className="text-gray-500 text-sm">Receipt #{receiptNo}</p>
           </div>
           <div className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
-            <div className="bg-[#2e4a7a] px-5 py-4 flex items-center justify-between">
+            <div className="bg-[#173A5E] px-5 py-4 flex items-center justify-between">
               <p className="brand-font text-white text-xl">Jomrork</p>
               <Tag label="Paid" color="green" />
             </div>
@@ -1344,22 +1445,22 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
               ))}
               <div className="pt-2 space-y-2">
                 <div className="flex justify-between"><span className="text-gray-500">First Month Rent</span><span>${l.price}</span></div>
-                <div className="flex justify-between text-amber-700 font-medium">
+                <div className="flex justify-between text-[#B08010] font-medium">
                   <span>Security Deposit ({depositMultiplier}× rent)</span>
                   <span>${deposit}</span>
                 </div>
                 <div className="flex justify-between font-bold text-base pt-1 border-t border-gray-100">
-                  <span>Total Paid Now</span><span className="text-[#2e4a7a]">${totalNow}</span>
+                  <span>Total Paid Now</span><span className="text-[#173A5E]">${totalNow}</span>
                 </div>
               </div>
               <div className="pt-2">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Landlord Contact</p>
                 <p className="text-sm font-semibold text-gray-800">{l.landlordName}</p>
-                <p className="text-sm text-[#2e4a7a] font-medium">{l.landlordPhone}</p>
+                <p className="text-sm text-[#173A5E] font-medium">{l.landlordPhone}</p>
               </div>
               <div className="pt-2 flex items-center gap-2">
                 <IC.CoinLg />
-                <span className="text-sm text-amber-700 font-semibold">+{pointsEarned} points earned</span>
+                <span className="text-sm text-[#B08010] font-semibold">+{pointsEarned} points earned</span>
               </div>
             </div>
             <div className="bg-green-50 px-5 py-3 border-t border-green-100 flex items-center gap-2">
@@ -1368,7 +1469,7 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
             </div>
           </div>
           <button onClick={onDone}
-            className="w-full bg-[#2e4a7a] text-white font-bold py-3.5 rounded-2xl text-sm active:scale-95 transition-transform">
+            className="w-full bg-[#173A5E] text-white font-bold py-3.5 rounded-full text-sm active:scale-95 transition-transform">
             Back to My Bookings
           </button>
         </div>
@@ -1386,7 +1487,7 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
         <SuccessModal receiptNo={receiptNo} pointsEarned={pointsEarned} onGoHome={handleGoHome} onGoBookings={handleGoBookings} />
       )}
 
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 flex items-center gap-3 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-4 px-4 flex items-center gap-3 shrink-0">
         <button onClick={onBack} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25"><IC.Back /></button>
         <div className="flex-1">
           <p className="text-white font-bold text-base">{step==="select"?"Booking Details":"Payment"}</p>
@@ -1399,7 +1500,7 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-4">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-4">
         {/* Property summary */}
         <div className="bg-white rounded-2xl p-3 flex gap-3 border border-gray-100 shadow-sm">
           <img src={l.images[0]} alt="" className="w-20 h-16 object-cover rounded-xl shrink-0" />
@@ -1418,7 +1519,7 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
               <div className="grid grid-cols-4 gap-2">
                 {durationOptions.map(m => (
                   <button key={m} onClick={() => setMonths(m)}
-                    className={`py-2.5 rounded-xl text-sm font-bold border transition-colors active:scale-95 ${months===m?"bg-[#2e4a7a] text-white border-[#2e4a7a]":"bg-gray-50 text-gray-600 border-gray-200"}`}>
+                    className={`py-2.5 rounded-xl text-sm font-bold border transition-colors active:scale-95 ${months===m?"bg-[#173A5E] text-white border-[#173A5E]":"bg-gray-50 text-gray-600 border-gray-200"}`}>
                     {m}mo
                   </button>
                 ))}
@@ -1430,16 +1531,16 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
                 <div className="flex justify-between py-2 first:pt-0">
                   <span className="text-gray-500">First Month Rent</span><span>${l.price}</span>
                 </div>
-                <div className="flex justify-between py-2 text-amber-700 font-medium">
-                  <span>Security Deposit <span className="text-xs font-normal text-amber-600">({depositMultiplier}× rent)</span></span>
+                <div className="flex justify-between py-2 text-[#B08010] font-medium">
+                  <span>Security Deposit <span className="text-xs font-normal text-[#C49A10]">({depositMultiplier}× rent)</span></span>
                   <span>${deposit}</span>
                 </div>
-                <div className="flex justify-between py-2 font-bold text-base"><span>Due Now</span><span className="text-[#2e4a7a]">${totalNow}</span></div>
+                <div className="flex justify-between py-2 font-bold text-base"><span>Due Now</span><span className="text-[#173A5E]">${totalNow}</span></div>
                 <div className="flex justify-between py-1 text-xs text-gray-400"><span>Remaining ({months - 1} months)</span><span>Paid monthly</span></div>
               </div>
-              <div className="mt-2.5 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 flex items-center gap-2">
+              <div className="mt-2.5 bg-[#FFFBDD] border border-[#F5E890] rounded-xl px-3 py-2 flex items-center gap-2">
                 <IC.CoinLg />
-                <p className="text-xs text-amber-700">You will earn <strong>{pointsEarned} points</strong> from this booking ({months} months × ${l.price})</p>
+                <p className="text-xs text-[#B08010]">You will earn <strong>{pointsEarned} points</strong> from this booking ({months} months × {ptPerMonth} pts/month)</p>
               </div>
               <div className="mt-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2 flex items-start gap-2">
                 <IC.Info />
@@ -1459,15 +1560,15 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
                   { id:"card" as const, label:"Bank Card", sub:"Visa / Mastercard / UnionPay", Icon: IC.Card },
                 ].map(pm => (
                   <button key={pm.id} onClick={() => setPay(pm.id)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-colors active:scale-[0.98] ${pay===pm.id?"border-[#2e4a7a] bg-[#2e4a7a]/5":"border-gray-200 bg-white"}`}>
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${pay===pm.id?"bg-[#2e4a7a] text-white":"bg-gray-100 text-gray-500"}`}>
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-colors active:scale-[0.98] ${pay===pm.id?"border-[#173A5E] bg-[#173A5E]/5":"border-gray-200 bg-white"}`}>
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${pay===pm.id?"bg-[#173A5E] text-white":"bg-gray-100 text-gray-500"}`}>
                       <pm.Icon />
                     </div>
                     <div className="text-left flex-1">
                       <p className="text-sm font-semibold text-gray-800">{pm.label}</p>
                       <p className="text-xs text-gray-400">{pm.sub}</p>
                     </div>
-                    <div className={`w-4 h-4 rounded-full border-2 transition-colors ${pay===pm.id?"border-[#2e4a7a] bg-[#2e4a7a]":"border-gray-300"}`} />
+                    <div className={`w-4 h-4 rounded-full border-2 transition-colors ${pay===pm.id?"border-[#173A5E] bg-[#173A5E]":"border-gray-300"}`} />
                   </button>
                 ))}
               </div>
@@ -1476,14 +1577,14 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
             {pay === "aba" ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col items-center gap-3">
                 <p className="text-sm font-bold text-gray-800">Scan with ABA Mobile</p>
-                <div className="w-44 h-44 border-2 border-[#2e4a7a] rounded-2xl bg-white p-3 grid grid-cols-7 gap-0.5">
+                <div className="w-44 h-44 border-2 border-[#173A5E] rounded-2xl bg-white p-3 grid grid-cols-7 gap-0.5">
                   {[...Array(49)].map((_,i) => (
-                    <div key={i} className={`rounded-[2px] ${(i*7+i*3+11)%4>0?"bg-[#2e4a7a]":"bg-transparent"}`} />
+                    <div key={i} className={`rounded-[2px] ${(i*7+i*3+11)%4>0?"bg-[#173A5E]":"bg-transparent"}`} />
                   ))}
                 </div>
                 <p className="text-xs text-gray-500 text-center">Open ABA Mobile → Pay → Scan this QR code</p>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 w-full text-center">
-                  <p className="text-sm font-bold text-amber-800">Amount: ${totalNow}</p>
+                <div className="bg-[#FFFBDD] border border-[#F0D94D] rounded-xl px-4 py-2 w-full text-center">
+                  <p className="text-sm font-bold text-[#8C6408]">Amount: ${totalNow}</p>
                 </div>
               </div>
             ) : (
@@ -1492,17 +1593,17 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
                 {[{l:"Card Number",p:"1234 5678 9012 3456"},{l:"Cardholder Name",p:"SOKHA CHAN"}].map(f => (
                   <div key={f.l}>
                     <p className="text-xs text-gray-500 mb-1">{f.l}</p>
-                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] transition-colors" placeholder={f.p} />
+                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] transition-colors" placeholder={f.p} />
                   </div>
                 ))}
                 <div className="flex gap-3">
                   <div className="flex-1">
                     <p className="text-xs text-gray-500 mb-1">Expiry</p>
-                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a]" placeholder="MM/YY" />
+                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E]" placeholder="MM/YY" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-gray-500 mb-1">CVV</p>
-                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a]" placeholder="•••" type="password" />
+                    <input className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E]" placeholder="•••" type="password" />
                   </div>
                 </div>
               </div>
@@ -1518,12 +1619,12 @@ function BookingFlow({ listingId, onBack, onApply, onDone, onGoHome }: {
       <div className="bg-white border-t border-gray-200 px-4 pt-3 pb-7 shrink-0">
         {step === "select" ? (
           <button onClick={() => setStep("contract")}
-            className="w-full bg-[#2e4a7a] text-white font-bold py-3.5 rounded-2xl text-sm shadow-md active:scale-95 transition-transform">
+            className="w-full bg-[#173A5E] text-white font-bold py-3.5 rounded-full text-sm shadow-md active:scale-95 transition-transform">
             Continue to Agreement · ${totalNow} due now
           </button>
         ) : (
           <button onClick={handleConfirm}
-            className="w-full bg-[#2e4a7a] text-white font-bold py-3.5 rounded-2xl text-sm shadow-md active:scale-95 transition-transform">
+            className="w-full bg-[#173A5E] text-white font-bold py-3.5 rounded-full text-sm shadow-md active:scale-95 transition-transform">
             Confirm Payment · ${totalNow}
           </button>
         )}
@@ -1537,18 +1638,18 @@ function BookingReceiptOverlay({ record, onClose }: { record: BookingRecord; onC
   const listing = LISTINGS.find(l => l.id === record.listingId);
   return (
     <div className="absolute inset-0 z-50 flex flex-col bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-12 pb-4 px-4 flex items-center gap-3 shrink-0">
+      <div className="bg-[#173A5E] pt-12 pb-4 px-4 flex items-center gap-3 shrink-0">
         <button onClick={onClose} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25"><IC.Back /></button>
         <p className="text-white font-bold text-base">Booking Receipt</p>
       </div>
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-4">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-4">
         <div className="flex flex-col items-center">
           <IC.CheckCircle />
           <p className="text-gray-900 font-bold text-lg mt-3">Booking Confirmed</p>
           <p className="text-gray-500 text-sm">Receipt #{record.receiptNo}</p>
         </div>
         <div className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
-          <div className="bg-[#2e4a7a] px-5 py-4 flex items-center justify-between">
+          <div className="bg-[#173A5E] px-5 py-4 flex items-center justify-between">
             <p className="brand-font text-white text-xl">Jomrork</p>
             <Tag label={record.status} color={record.status==="Active"?"green":record.status==="Pending"?"amber":"gray"} />
           </div>
@@ -1563,25 +1664,25 @@ function BookingReceiptOverlay({ record, onClose }: { record: BookingRecord; onC
             ))}
             <div className="pt-2 space-y-2">
               <div className="flex justify-between"><span className="text-gray-500">First Month Rent</span><span>${record.total - record.deposit}</span></div>
-              <div className="flex justify-between text-amber-700 font-medium">
+              <div className="flex justify-between text-[#B08010] font-medium">
                 <span>Security Deposit</span>
                 <span>${record.deposit}</span>
               </div>
               <div className="flex justify-between font-bold text-base pt-1 border-t border-gray-100">
-                <span>Total Paid</span><span className="text-[#2e4a7a]">${record.total}</span>
+                <span>Total Paid</span><span className="text-[#173A5E]">${record.total}</span>
               </div>
             </div>
             {listing && (
               <div className="pt-2">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Landlord Contact</p>
                 <p className="text-sm font-semibold text-gray-800">{listing.landlordName}</p>
-                <p className="text-sm text-[#2e4a7a] font-medium">{listing.landlordPhone}</p>
+                <p className="text-sm text-[#173A5E] font-medium">{listing.landlordPhone}</p>
               </div>
             )}
             {record.pointsEarned > 0 && (
               <div className="pt-2 flex items-center gap-2">
                 <IC.CoinLg />
-                <span className="text-sm text-amber-700 font-semibold">+{record.pointsEarned} points earned</span>
+                <span className="text-sm text-[#B08010] font-semibold">+{record.pointsEarned} points earned</span>
               </div>
             )}
           </div>
@@ -1591,7 +1692,7 @@ function BookingReceiptOverlay({ record, onClose }: { record: BookingRecord; onC
           </div>
         </div>
         <button onClick={onClose}
-          className="w-full bg-[#2e4a7a] text-white font-bold py-3.5 rounded-2xl text-sm active:scale-95 transition-transform">
+          className="w-full bg-[#173A5E] text-white font-bold py-3.5 rounded-full text-sm active:scale-95 transition-transform">
           Back to My Bookings
         </button>
       </div>
@@ -1609,9 +1710,7 @@ function BookingsScreen({ records, onView, isGuest, onLogin }: {
 
   if (isGuest) return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 shrink-0">
-        <p className="text-white font-bold text-lg">My Bookings</p>
-      </div>
+      <TabHeader title="My Bookings" />
       <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
         <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
           <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.5} className="w-8 h-8">
@@ -1620,7 +1719,7 @@ function BookingsScreen({ records, onView, isGuest, onLogin }: {
         </div>
         <p className="text-gray-700 font-bold text-base">Log in to see your bookings</p>
         <p className="text-gray-400 text-sm">Your booking history will appear here once you have an account.</p>
-        <button onClick={onLogin} className="bg-[#2e4a7a] text-white font-bold px-8 py-3 rounded-2xl text-sm active:scale-95 transition-transform">
+        <button onClick={onLogin} className="bg-[#173A5E] text-white font-bold px-8 py-3 rounded-full text-sm active:scale-95 transition-transform">
           Log In / Sign Up
         </button>
       </div>
@@ -1632,11 +1731,8 @@ function BookingsScreen({ records, onView, isGuest, onLogin }: {
       {viewingReceipt && (
         <BookingReceiptOverlay record={viewingReceipt} onClose={() => setViewingReceipt(null)} />
       )}
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 shrink-0">
-        <p className="text-white font-bold text-lg">My Bookings</p>
-        <p className="text-white/55 text-xs">{all.length} booking{all.length!==1?"s":""}</p>
-      </div>
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-3">
+      <TabHeader title="My Bookings" subtitle={`${all.length} booking${all.length!==1?"s":""}`} />
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-3">
         {all.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-center gap-3">
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
@@ -1658,7 +1754,7 @@ function BookingsScreen({ records, onView, isGuest, onLogin }: {
                   <p className="text-xs text-gray-500 mt-0.5">{b.area} · {b.months}mo</p>
                   <div className="flex items-center justify-between mt-2">
                     <p className="text-xs text-gray-400">#{b.receiptNo}</p>
-                    <p className="font-bold text-[#2e4a7a] text-sm">${b.total}</p>
+                    <p className="font-bold text-[#173A5E] text-sm">${b.total}</p>
                   </div>
                 </div>
               </div>
@@ -1667,10 +1763,10 @@ function BookingsScreen({ records, onView, isGuest, onLogin }: {
               <p className="text-[10px] text-gray-400">{b.date} · {b.payMethod==="aba"?"ABA QR":"Bank Card"}</p>
               <div className="flex items-center gap-2">
                 {b.pointsEarned > 0 && (
-                  <span className="text-[10px] text-amber-600 font-semibold">+{b.pointsEarned}pts</span>
+                  <span className="text-[10px] text-[#C49A10] font-semibold">+{b.pointsEarned}pts</span>
                 )}
                 <button onClick={() => setViewingReceipt(b)}
-                  className="text-[10px] text-[#2e4a7a] font-semibold flex items-center gap-0.5 active:opacity-70">
+                  className="text-[10px] text-[#173A5E] font-semibold flex items-center gap-0.5 active:opacity-70">
                   See Receipt <IC.ChevronRight />
                 </button>
               </div>
@@ -1691,9 +1787,7 @@ function FavoritesScreen({ savedIds, onListing, onSave, bookedByUser, isGuest, o
 
   if (isGuest) return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 shrink-0">
-        <p className="text-white font-bold text-lg">Saved</p>
-      </div>
+      <TabHeader title="Saved" />
       <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
         <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
           <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.5} className="w-8 h-8">
@@ -1702,7 +1796,7 @@ function FavoritesScreen({ savedIds, onListing, onSave, bookedByUser, isGuest, o
         </div>
         <p className="text-gray-700 font-bold text-base">Log in to save listings</p>
         <p className="text-gray-400 text-sm">Create an account to save your favourite places and access them anytime.</p>
-        <button onClick={onLogin} className="bg-[#2e4a7a] text-white font-bold px-8 py-3 rounded-2xl text-sm active:scale-95 transition-transform">
+        <button onClick={onLogin} className="bg-[#173A5E] text-white font-bold px-8 py-3 rounded-full text-sm active:scale-95 transition-transform">
           Log In / Sign Up
         </button>
       </div>
@@ -1711,11 +1805,8 @@ function FavoritesScreen({ savedIds, onListing, onSave, bookedByUser, isGuest, o
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 shrink-0">
-        <p className="text-white font-bold text-lg">Saved</p>
-        <p className="text-white/55 text-xs">{saved.length} saved listing{saved.length!==1?"s":""}</p>
-      </div>
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-3">
+      <TabHeader title="Saved" subtitle={`${saved.length} listing${saved.length!==1?"s":""}`} />
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-3 stagger-list">
         {saved.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-center gap-3">
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
@@ -1737,14 +1828,33 @@ function FavoritesScreen({ savedIds, onListing, onSave, bookedByUser, isGuest, o
 // ─── MESSAGES ────────────────────────────────────────────────────────────────
 interface AutoMessage { id: string; name: string; preview: string; time: string; detail: string; }
 
-function MessagesScreen({ autoMessages }: { autoMessages: AutoMessage[] }) {
+function MessagesScreen({ autoMessages, isGuest, onLogin }: { autoMessages: AutoMessage[]; isGuest: boolean; onLogin: () => void; }) {
+  if (isGuest) return (
+    <div className="flex flex-col h-full bg-[#fbfaf7]">
+      <TabHeader title="Messages" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
+        <div className="w-16 h-16 rounded-full bg-[#173A5E]/10 flex items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#173A5E" strokeWidth={1.5} className="w-8 h-8">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p className="font-bold text-gray-900 text-lg">Messages are private</p>
+          <p className="text-gray-500 text-sm mt-1">Create an account to message landlords and get replies.</p>
+        </div>
+        <button onClick={onLogin} className="bg-[#173A5E] text-white font-bold px-8 py-3 rounded-full text-sm active:scale-95 transition-transform">
+          Log In / Sign Up
+        </button>
+      </div>
+    </div>
+  );
   const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState("");
 
   const staticConvos = [
     { id:"m1", name:"Sky Villa · Toul Kork", msg:"Yes, you can visit tomorrow morning!", time:"2m ago", unread:2, bg:"#6b7280" },
-    { id:"m2", name:"Jomrork Support", msg:"Your booking #JMR-482921 is confirmed.", time:"1h ago", unread:0, bg:"#2e4a7a" },
-    { id:"m3", name:"BKK1 Condo Owner", msg:"The deposit is 1 month rent. Agree?", time:"Yesterday", unread:1, bg:"#4b6cb7" },
+    { id:"m2", name:"Jomrork Support", msg:"Your booking #JMR-482921 is confirmed.", time:"1h ago", unread:0, bg:"#173A5E" },
+    { id:"m3", name:"BKK1 Condo Owner", msg:"The deposit is 1 month rent. Agree?", time:"Yesterday", unread:1, bg:"#173A5E" },
   ];
 
   const allConvos = [
@@ -1766,15 +1876,15 @@ function MessagesScreen({ autoMessages }: { autoMessages: AutoMessage[] }) {
 
     return (
       <div className="flex flex-col h-full bg-[#fbfaf7]">
-        <div className="bg-[#2e4a7a] pt-10 pb-3 px-4 flex items-center gap-3 shrink-0">
+        <div className="bg-[#173A5E] pt-14 pb-3 px-4 flex items-center gap-3 shrink-0">
           <button onClick={() => setActiveId(null)} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25"><IC.Back /></button>
           <Avatar name={active.name} bg={active.bg} size="sm" />
           <p className="text-white font-semibold text-sm">{active.name}</p>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-3">
+        <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-3">
           {thread.map((m,i) => (
             <div key={i} className={`flex ${m.from==="me"?"justify-end":"justify-start"}`}>
-              <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${m.from==="me"?"bg-[#2e4a7a] text-white rounded-tr-sm":"bg-white text-gray-800 border border-gray-100 rounded-tl-sm shadow-sm"}`}>
+              <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${m.from==="me"?"bg-[#173A5E] text-white rounded-tr-sm":"bg-white text-gray-800 border border-gray-100 rounded-tl-sm shadow-sm"}`}>
                 <p className="whitespace-pre-wrap">{m.text}</p>
                 <p className={`text-[10px] mt-1 text-right ${m.from==="me"?"text-white/55":"text-gray-400"}`}>{m.t}</p>
               </div>
@@ -1783,9 +1893,9 @@ function MessagesScreen({ autoMessages }: { autoMessages: AutoMessage[] }) {
         </div>
         <div className="bg-white border-t border-gray-200 px-4 py-3 flex gap-2 shrink-0">
           <input value={input} onChange={e => setInput(e.target.value)}
-            className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] transition-colors" placeholder="Type a message..." />
+            className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] transition-colors" placeholder="Type a message..." />
           <button onClick={() => setInput("")}
-            className="w-10 h-10 bg-[#2e4a7a] rounded-xl flex items-center justify-center text-white active:scale-90 transition-transform">
+            className="w-10 h-10 bg-[#173A5E] rounded-xl flex items-center justify-center text-white active:scale-90 transition-transform">
             <IC.Send />
           </button>
         </div>
@@ -1795,10 +1905,8 @@ function MessagesScreen({ autoMessages }: { autoMessages: AutoMessage[] }) {
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-10 pb-4 px-4 shrink-0">
-        <p className="text-white font-bold text-lg">Messages</p>
-      </div>
-      <div className="flex-1 overflow-y-auto bg-white">
+      <TabHeader title="Messages" />
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch bg-white">
         {allConvos.map(c => (
           <button key={c.id} onClick={() => setActiveId(c.id)}
             className="w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-50 text-left active:bg-gray-50 transition-colors">
@@ -1811,7 +1919,7 @@ function MessagesScreen({ autoMessages }: { autoMessages: AutoMessage[] }) {
               <p className="text-xs text-gray-500 truncate mt-0.5">{c.msg}</p>
             </div>
             {c.unread > 0 && (
-              <div className="w-5 h-5 rounded-full bg-[#2e4a7a] flex items-center justify-center shrink-0">
+              <div className="w-5 h-5 rounded-full bg-[#173A5E] flex items-center justify-center shrink-0">
                 <span className="text-[10px] text-white font-bold">{c.unread}</span>
               </div>
             )}
@@ -1830,8 +1938,8 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
       title: "My Bookings",
       body: (
         <div className="space-y-4">
-          <div className="bg-[#2e4a7a]/5 border border-[#2e4a7a]/15 rounded-2xl p-4">
-            <p className="text-2xl font-black text-[#2e4a7a]">{bookingCount}</p>
+          <div className="bg-[#173A5E]/5 border border-[#173A5E]/15 rounded-2xl p-4">
+            <p className="text-2xl font-black text-[#173A5E]">{bookingCount}</p>
             <p className="text-sm text-gray-600 mt-0.5">Total booking{bookingCount !== 1 ? "s" : ""} made</p>
           </div>
           <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2 text-sm text-gray-700">
@@ -1849,7 +1957,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
         <div className="space-y-3">
           <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-[#2e4a7a]/10 rounded-xl flex items-center justify-center"><IC.QR /></div>
+              <div className="w-10 h-10 bg-[#173A5E]/10 rounded-xl flex items-center justify-center"><IC.QR /></div>
               <div>
                 <p className="font-bold text-gray-900 text-sm">ABA QR Code</p>
                 <p className="text-xs text-gray-500">Scan with ABA Mobile app</p>
@@ -1868,9 +1976,9 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
             </div>
             <p className="text-xs text-gray-600 leading-relaxed">Enter your card details during checkout. All card data is encrypted with 256-bit TLS. Jomrork never stores your card number.</p>
           </div>
-          <div className="bg-amber-50 border border-amber-100 rounded-2xl p-3 flex items-start gap-2">
+          <div className="bg-[#FFFBDD] border border-[#F5E890] rounded-2xl p-3 flex items-start gap-2">
             <IC.Info />
-            <p className="text-xs text-amber-700">Jomrork charges <strong>no service fees</strong> to tenants. The amount you see is exactly what you pay.</p>
+            <p className="text-xs text-[#B08010]">Jomrork charges <strong>no service fees</strong> to tenants. The amount you see is exactly what you pay.</p>
           </div>
         </div>
       ),
@@ -1891,7 +1999,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
                 <p className="text-sm font-semibold text-gray-800">{label as string}</p>
                 <p className="text-[10px] text-gray-400 mt-0.5">{sub as string}</p>
               </div>
-              <div className={`w-11 h-6 rounded-full flex items-center transition-colors ${on ? "bg-[#2e4a7a] justify-end" : "bg-gray-200 justify-start"}`}>
+              <div className={`w-11 h-6 rounded-full flex items-center transition-colors ${on ? "bg-[#173A5E] justify-end" : "bg-gray-200 justify-start"}`}>
                 <div className="w-5 h-5 bg-white rounded-full mx-0.5 shadow-sm" />
               </div>
             </div>
@@ -1949,7 +2057,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
             { n:"6", title:"Move In & Earn Points", desc:"Move in on your start date. Earn 1 Jomrork Point per $1 of rent paid — redeemable for rewards." },
           ].map(s => (
             <div key={s.n} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#2e4a7a] flex items-center justify-center text-white font-bold text-sm shrink-0">{s.n}</div>
+              <div className="w-8 h-8 rounded-full bg-[#173A5E] flex items-center justify-center text-white font-bold text-sm shrink-0">{s.n}</div>
               <div>
                 <p className="font-bold text-gray-900 text-sm">{s.title}</p>
                 <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{s.desc}</p>
@@ -1967,7 +2075,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
             <p className="text-sm text-gray-600">We take all reports seriously and respond within 24 hours.</p>
             <div>
               <p className="text-xs text-gray-500 mb-1">Category</p>
-              <select className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] bg-white">
+              <select className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] bg-white">
                 <option>Landlord behavior issue</option>
                 <option>Payment problem</option>
                 <option>Listing inaccurate</option>
@@ -1978,15 +2086,15 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
             </div>
             <div>
               <p className="text-xs text-gray-500 mb-1">Describe the problem</p>
-              <textarea rows={4} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] resize-none" placeholder="Please describe what happened..." />
+              <textarea rows={4} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] resize-none" placeholder="Please describe what happened..." />
             </div>
-            <button className="w-full bg-[#2e4a7a] text-white font-bold py-3 rounded-2xl text-sm active:scale-95 transition-transform">
+            <button className="w-full bg-[#173A5E] text-white font-bold py-3 rounded-full text-sm active:scale-95 transition-transform">
               Submit Report
             </button>
           </div>
-          <div className="bg-amber-50 border border-amber-100 rounded-2xl p-3 flex items-start gap-2">
+          <div className="bg-[#FFFBDD] border border-[#F5E890] rounded-2xl p-3 flex items-start gap-2">
             <IC.Info />
-            <p className="text-xs text-amber-700">For urgent safety issues, call Cambodian emergency services at <strong>119</strong>.</p>
+            <p className="text-xs text-[#B08010]">For urgent safety issues, call Cambodian emergency services at <strong>119</strong>.</p>
           </div>
         </div>
       ),
@@ -2022,7 +2130,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
             { label:"Phone", sub:"+855 23 999 888 (9AM–6PM)", Icon: IC.Bell, badge:null },
           ].map(({ label, sub, Icon, badge }) => (
             <button key={label} className="w-full bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-3 active:bg-gray-50 transition-colors">
-              <div className="w-10 h-10 bg-[#2e4a7a]/10 rounded-xl flex items-center justify-center text-[#2e4a7a]"><Icon /></div>
+              <div className="w-10 h-10 bg-[#173A5E]/10 rounded-xl flex items-center justify-center text-[#173A5E]"><Icon /></div>
               <div className="flex-1 text-left">
                 <p className="font-bold text-gray-900 text-sm">{label}</p>
                 <p className="text-xs text-gray-500">{sub}</p>
@@ -2033,8 +2141,8 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
           ))}
           <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
             <p className="text-sm font-bold text-gray-900">Send a message</p>
-            <textarea rows={3} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] resize-none" placeholder="How can we help?" />
-            <button className="w-full bg-[#2e4a7a] text-white font-bold py-3 rounded-2xl text-sm active:scale-95 transition-transform">Send</button>
+            <textarea rows={3} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] resize-none" placeholder="How can we help?" />
+            <button className="w-full bg-[#173A5E] text-white font-bold py-3 rounded-full text-sm active:scale-95 transition-transform">Send</button>
           </div>
         </div>
       ),
@@ -2088,7 +2196,7 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
       title: "Commission Policy",
       body: (
         <div className="space-y-3">
-          <div className="bg-[#2e4a7a] rounded-2xl p-5 text-white">
+          <div className="bg-[#173A5E] rounded-2xl p-5 text-white">
             <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Our Promise</p>
             <p className="font-bold text-xl">Zero fees for students</p>
             <p className="text-white/70 text-sm mt-1">Jomrork charges nothing to tenants. Ever.</p>
@@ -2096,9 +2204,9 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
           <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3 text-sm">
             <p className="font-bold text-gray-900">How Jomrork earns revenue</p>
             <p className="text-gray-600 leading-relaxed">Jomrork charges a commission <strong>only from landlords/accommodation owners</strong> who list their properties on the platform — not from students or tenants.</p>
-            <div className="bg-[#2e4a7a]/5 border border-[#2e4a7a]/15 rounded-xl p-3">
-              <p className="font-bold text-[#2e4a7a] text-sm mb-1">Commission Rate</p>
-              <p className="text-2xl font-black text-[#2e4a7a]">8–10%</p>
+            <div className="bg-[#173A5E]/5 border border-[#173A5E]/15 rounded-xl p-3">
+              <p className="font-bold text-[#173A5E] text-sm mb-1">Commission Rate</p>
+              <p className="text-2xl font-black text-[#173A5E]">8–10%</p>
               <p className="text-xs text-gray-600 mt-1">of the first month&apos;s rent, charged <strong>once</strong> at the time the student confirms move-in.</p>
             </div>
             <div className="border-t border-gray-50 pt-3 space-y-2 text-xs text-gray-600">
@@ -2121,13 +2229,13 @@ function ProfileDetail({ item, bookingCount, onBack }: { item: string; bookingCo
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-12 pb-4 px-4 flex items-center gap-3 shrink-0">
+      <div className="bg-[#173A5E] pt-12 pb-4 px-4 flex items-center gap-3 shrink-0">
         <button onClick={onBack} className="w-9 h-9 bg-white/15 rounded-full flex items-center justify-center active:bg-white/25">
           <IC.Back />
         </button>
         <p className="text-white font-bold text-base">{detail.title}</p>
       </div>
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-6">
         {detail.body}
       </div>
     </div>
@@ -2141,6 +2249,7 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
   const [editing, setEditing] = useState(false);
   const [profilePic, setProfilePic] = useState<string | null>(null);
   const [openDetail, setOpenDetail] = useState<string | null>(null);
+  const [lang, setLang] = useState<"en" | "km">("en");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const menuSections = [
@@ -2178,24 +2287,27 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
     ];
     return (
       <div className="flex flex-col h-full bg-[#fbfaf7]">
-        <div className="bg-[#2e4a7a] pt-16 pb-6 px-4 shrink-0 flex flex-col items-center">
-          <div className="w-[72px] h-[72px] rounded-full bg-white/15 border-2 border-white/30 flex items-center justify-center mb-3">
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth={1.5} className="w-9 h-9">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" strokeLinecap="round" />
-            </svg>
+        <div className="bg-[#173A5E] pt-14 pb-5 px-4 shrink-0">
+          <p style={{ fontFamily: PP, fontWeight: 700, fontSize: 20, color: "#fff", lineHeight: 1.15, marginBottom: 16 }}>Profile</p>
+          <div className="flex flex-col items-center">
+            <div className="w-[68px] h-[68px] rounded-full bg-white/15 border-2 border-white/30 flex items-center justify-center mb-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth={1.5} className="w-9 h-9">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" strokeLinecap="round" />
+              </svg>
+            </div>
+            <p className="text-white font-bold text-base">Guest</p>
+            <p className="text-white/50 text-xs mt-0.5">Browsing without an account</p>
           </div>
-          <p className="text-white font-bold text-lg">Guest</p>
-          <p className="text-white/50 text-xs mt-0.5">Browsing without an account</p>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6 space-y-3">
+        <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-6 space-y-3">
           {/* CTA card */}
           <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center space-y-3">
             <p className="text-gray-800 font-bold text-base">You&apos;re browsing as a guest</p>
             <p className="text-gray-500 text-sm leading-relaxed">Log in or sign up to book accommodations, save listings, view your history, and earn points.</p>
             <button onClick={onLogin}
-              className="w-full bg-[#2e4a7a] text-white font-bold py-3 rounded-2xl text-sm active:scale-95 transition-transform">
+              className="w-full bg-[#173A5E] text-white font-bold py-3 rounded-full text-sm active:scale-95 transition-transform">
               Log In / Sign Up
             </button>
           </div>
@@ -2244,7 +2356,8 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
 
   return (
     <div className="flex flex-col h-full bg-[#fbfaf7]">
-      <div className="bg-[#2e4a7a] pt-16 pb-5 px-4 shrink-0">
+      <div className="bg-[#173A5E] pt-14 pb-5 px-4 shrink-0">
+        <p style={{ fontFamily: PP, fontWeight: 700, fontSize: 20, color: "#fff", lineHeight: 1.15, marginBottom: 16 }}>Profile</p>
         {/* Avatar with change-photo */}
         <div className="flex flex-col items-center mb-3">
           <button onClick={() => fileRef.current?.click()} className="relative mb-2 active:scale-95 transition-transform">
@@ -2255,7 +2368,7 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
               }
             </div>
             <div className="absolute bottom-0 right-0 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#2e4a7a" strokeWidth={2.2} className="w-3.5 h-3.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#173A5E" strokeWidth={2.2} className="w-3.5 h-3.5">
                 <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                 <circle cx="12" cy="13" r="4" />
               </svg>
@@ -2289,7 +2402,7 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-3">
+      <div className="flex-1 overflow-y-auto scroll-smooth-touch px-4 pt-4 pb-4 space-y-3">
         {editing && (
           <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3 fade-in">
             <p className="font-bold text-gray-900 text-sm">Edit Profile</p>
@@ -2298,14 +2411,14 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
             {[["Full Name","Sophea Kea"],["National ID Number","120498123456789"],["Phone","+855 12 345 678"]].map(([lbl,val]) => (
               <div key={lbl}>
                 <p className="text-xs text-gray-500 mb-1">{lbl}</p>
-                <input defaultValue={val} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] transition-colors" />
+                <input defaultValue={val} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] transition-colors" />
               </div>
             ))}
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider pt-1">Optional</p>
             {[["Email","sophea.kea@student.rupp.edu"],["University / Institution","RUPP"],["Occupation","Student"]].map(([lbl,val]) => (
               <div key={lbl}>
                 <p className="text-xs text-gray-500 mb-1">{lbl}</p>
-                <input defaultValue={val} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#2e4a7a] transition-colors" />
+                <input defaultValue={val} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#173A5E] transition-colors" />
               </div>
             ))}
           </div>
@@ -2335,6 +2448,22 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
           </div>
         </div>
 
+        {/* Language setting */}
+        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Language</p>
+          <div className="flex gap-2">
+            {([{ code: "en", label: "🇬🇧  English" }, { code: "km", label: "🇰🇭  Khmer" }] as const).map(({ code, label }) => (
+              <button key={code} onClick={() => setLang(code)}
+                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-colors ${lang === code ? "bg-[#173A5E] text-white border-[#173A5E]" : "bg-gray-50 text-gray-600 border-gray-200 active:bg-gray-100"}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {lang === "km" && (
+            <p className="text-[11px] text-[#173A5E] mt-2 text-center">Khmer language — full translation coming soon</p>
+          )}
+        </div>
+
         {menuSections.map(({ section, items }) => (
           <div key={section} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 pt-3 pb-1">{section}</p>
@@ -2352,10 +2481,10 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
           </div>
         ))}
 
-        <div className="bg-[#2e4a7a]/5 border border-[#2e4a7a]/15 rounded-2xl p-4">
+        <div className="bg-[#173A5E]/5 border border-[#173A5E]/15 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <IC.Info />
-            <p className="text-sm font-bold text-[#2e4a7a]">How Jomrork Works</p>
+            <p className="text-sm font-bold text-[#173A5E]">How Jomrork Works</p>
           </div>
           <p className="text-xs text-gray-600 leading-relaxed">
             We charge landlords 8–10% of first month rent, once — well below agency rates. You pay <strong>no fees</strong>. Earn 1 point per $1 rent paid. Refunds available within <strong>48 hours</strong> of booking.
@@ -2382,14 +2511,23 @@ function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => vo
     { id:"profile",  Icon: on => <IC.User on={on} />,     label:"Profile" },
   ];
   return (
-    <div className="bg-white border-t border-gray-200 flex items-center px-1 pt-2 pb-6 shrink-0">
-      {tabs.map(t => (
-        <button key={t.id} onClick={() => onChange(t.id)}
-          className={`flex-1 flex flex-col items-center gap-0.5 py-1 transition-colors active:scale-95 ${active===t.id?"text-[#2e4a7a]":"text-gray-400"}`}>
-          {t.Icon(active === t.id)}
-          <span className={`text-[9px] font-semibold ${active===t.id?"text-[#2e4a7a]":"text-gray-400"}`}>{t.label}</span>
-        </button>
-      ))}
+    <div className="bg-white border-t border-gray-100 flex items-center px-1 pt-2 pb-6 shrink-0" style={{ transition: "box-shadow 0.2s ease" }}>
+      {tabs.map(t => {
+        const isActive = active === t.id;
+        return (
+          <button key={t.id} onClick={() => onChange(t.id)}
+            style={{ transition: "color 0.2s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1)" }}
+            className={`flex-1 flex flex-col items-center gap-0.5 py-1 active:scale-90 ${isActive ? "text-[#173A5E]" : "text-gray-400"}`}>
+            <div style={{ transform: isActive ? "translateY(-1px)" : "translateY(0)", transition: "transform 0.22s cubic-bezier(0.34,1.56,0.64,1)" }}>
+              {t.Icon(isActive)}
+            </div>
+            <span style={{ fontFamily: PP, fontWeight: isActive ? 600 : 400, fontSize: 9, color: isActive ? "#173A5E" : "#9ca3af", transition: "color 0.2s ease, font-weight 0.2s ease" }}>
+              {t.label}
+            </span>
+            <div style={{ height: 3, width: isActive ? 18 : 0, borderRadius: 2, background: "#173A5E", transition: "width 0.28s cubic-bezier(0.34,1.56,0.64,1)", marginTop: 1 }} />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -2400,112 +2538,167 @@ function LoginScreen({ onLogin, onGuest }: { onLogin: () => void; onGuest: () =>
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
-
-  const inputCls = "w-full bg-white border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none focus:border-[#2e4a7a] focus:ring-2 focus:ring-[#2e4a7a]/10 transition-all placeholder-gray-400";
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   return (
-    <div className="flex flex-col h-full" style={{ background: "#fbfaf7" }}>
-      {/* ── Header ── */}
-      <div className="shrink-0 flex flex-col items-center justify-end pb-8 pt-16 px-6"
-        style={{ background: "linear-gradient(160deg,#1e3a6e 0%,#2e4a7a 55%,#3d6199 100%)", minHeight: "38%" }}>
+    <div className="flex flex-col h-full relative overflow-hidden" style={{ background: "#0d2340" }}>
+      {/* Full-bleed photo — fades in once loaded */}
+      <img
+        src={phnomPenhBg}
+        alt=""
+        onLoad={() => setBgLoaded(true)}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ objectPosition: "center top", opacity: bgLoaded ? 1 : 0, transition: "opacity 0.8s ease" }}
+      />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(23,58,94,0.62) 0%, rgba(23,58,94,0.28) 38%, rgba(0,0,18,0.72) 100%)" }} />
 
-        {/* Logo mark */}
-        <div className="w-16 h-16 rounded-[20px] flex items-center justify-center mb-4 shadow-xl"
-          style={{ background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.25)", backdropFilter: "blur(6px)" }}>
-          <span className="brand-font text-white text-3xl">J</span>
+      {/* Scrollable content */}
+      <div className="relative z-10 flex flex-col h-full overflow-y-auto">
+
+        {/* Top bar: logo + location pill */}
+        <div className="flex items-center justify-between px-5 pt-14 pb-3 shrink-0">
+          <JomrorkLogo size={38} onDark glow />
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
+            <span style={{ fontFamily: PP, fontWeight: 500, color: "white", fontSize: 12 }}>Phnom Penh</span>
+            <svg viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth={2} className="w-3 h-3 shrink-0">
+              <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
         </div>
 
-        <h1 className="brand-font text-white text-4xl tracking-wide">Jomrork</h1>
-        <p className="text-white/50 text-[11px] mt-1.5 tracking-[0.18em] uppercase">Student Housing · Phnom Penh</p>
-      </div>
-
-      {/* ── Form card ── */}
-      <div className="flex-1 overflow-y-auto px-5 pt-7 pb-8 space-y-5">
-
-        {/* Heading */}
-        <div>
-          <h2 className="text-2xl font-bold text-[#1e3a6e]">
-            {mode === "login" ? "Welcome back" : "Create account"}
-          </h2>
-          <p className="text-gray-500 text-sm mt-1">
-            {mode === "login" ? "Log in to find your next home" : "Join Jomrork to book your student room"}
+        {/* Hero text — sits in upper portion; flex-1 spacer pushes card down */}
+        <div className="px-5 pt-4 pb-5 shrink-0">
+          <p style={{ fontFamily: PP, fontWeight: 500, color: "#FBD34D", fontSize: 14 }} className="mb-2">
+            {mode === "login" ? "Welcome back" : "Join Jomrork"}
           </p>
+          <h1 style={{ fontFamily: PP, fontWeight: 700, lineHeight: 1.15, color: "white", fontSize: "clamp(26px,7vw,32px)", whiteSpace: "pre-line" }}>
+            {mode === "login" ? "Your next room in\nthe city is waiting." : "Find your perfect\nstudent home today."}
+          </h1>
         </div>
 
-        {/* Fields */}
-        <div className="space-y-3">
-          {mode === "signup" && (
-            <input className={inputCls} placeholder="Full name" type="text" />
-          )}
-          <input className={inputCls} placeholder="Email address" type="email"
-            value={email} onChange={e => setEmail(e.target.value)} />
-          <div className="relative">
-            <input className={inputCls} placeholder="Password"
-              type={showPass ? "text" : "password"}
-              value={password} onChange={e => setPassword(e.target.value)}
-              style={{ paddingRight: "3rem" }} />
-            <button onClick={() => setShowPass(v => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 active:text-gray-600 transition-colors">
-              {showPass ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" strokeLinecap="round"/>
-                  <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" strokeLinecap="round"/>
-                  <line x1="1" y1="1" x2="23" y2="23" strokeLinecap="round"/>
+        {/* Spacer: shows monument between headline and card */}
+        <div style={{ flex: 1, minHeight: 30, maxHeight: 100 }} />
+
+        {/* Frosted glass card */}
+        <div className="mx-3 mb-4 shrink-0">
+          <div className="rounded-3xl p-6 space-y-4" style={{
+            background: "rgba(255,255,255,0.13)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.20)"
+          }}>
+            <p style={{ fontFamily: PP, fontWeight: 400, color: "rgba(255,255,255,0.78)", fontSize: 13 }}>
+              Log in to pick up where you left off.
+            </p>
+
+            {/* Email */}
+            {mode === "signup" && (
+              <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.8} className="w-5 h-5 shrink-0">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeLinecap="round"/><circle cx="12" cy="7" r="4"/>
                 </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" strokeLinecap="round"/>
-                  <circle cx="12" cy="12" r="3"/>
+                <input type="text" placeholder="Full name" className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent" style={{ fontFamily: PP }} />
+              </div>
+            )}
+            <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.8} className="w-5 h-5 shrink-0">
+                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <input type="email" placeholder="you@gmail.com" value={email} onChange={e => setEmail(e.target.value)}
+                className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent" style={{ fontFamily: PP }} />
+            </div>
+
+            {/* Password */}
+            <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.8} className="w-5 h-5 shrink-0">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round"/>
+              </svg>
+              <input type={showPass ? "text" : "password"} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}
+                className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent" style={{ fontFamily: PP }} />
+              <button onClick={() => setShowPass(v => !v)} className="text-gray-400 active:text-gray-600 transition-colors shrink-0">
+                {showPass ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" strokeLinecap="round"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" strokeLinecap="round"/>
+                    <line x1="1" y1="1" x2="23" y2="23" strokeLinecap="round"/>
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" strokeLinecap="round"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+            {mode === "signup" && (
+              <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth={1.8} className="w-5 h-5 shrink-0">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round"/>
                 </svg>
-              )}
+                <input type="password" placeholder="Confirm password" className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent" style={{ fontFamily: PP }} />
+              </div>
+            )}
+
+            {/* Forgot password */}
+            {mode === "login" && (
+              <div className="flex justify-end">
+                <button style={{ fontFamily: PP, fontWeight: 500, color: "#FBD34D", fontSize: 12 }} className="active:opacity-70">
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
+            {/* Primary CTA — white pill */}
+            <button onClick={onLogin}
+              className="w-full bg-white py-4 rounded-full text-sm shadow-md active:scale-[0.98] transition-transform"
+              style={{ color: "#173A5E", fontFamily: PP, fontWeight: 600 }}>
+              {mode === "login" ? "Log in" : "Create account"}
             </button>
+
+            {/* OR divider */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/20" />
+              <span style={{ fontFamily: PP, color: "rgba(255,255,255,0.55)", fontSize: 12 }}>or</span>
+              <div className="flex-1 h-px bg-white/20" />
+            </div>
+
+            {/* Continue as guest — outline white pill */}
+            <button onClick={onGuest}
+              className="w-full border border-white/55 py-4 rounded-full text-sm text-white active:scale-[0.98] transition-transform"
+              style={{ fontFamily: PP, fontWeight: 600 }}>
+              Continue as guest
+            </button>
+
+            {/* Sign up / log in toggle */}
+            <p className="text-center text-sm" style={{ fontFamily: PP, fontWeight: 400, color: "rgba(255,255,255,0.70)" }}>
+              {mode === "login" ? (
+                <>New here?{" "}
+                  <button onClick={() => setMode("signup")} style={{ fontWeight: 700, color: "white" }} className="active:opacity-70">
+                    Create an account
+                  </button>
+                </>
+              ) : (
+                <>Already have an account?{" "}
+                  <button onClick={() => setMode("login")} style={{ fontWeight: 700, color: "white" }} className="active:opacity-70">
+                    Log in
+                  </button>
+                </>
+              )}
+            </p>
+
+            {/* National ID badge */}
+            <div className="pt-3 flex items-start gap-3" style={{ borderTop: "1.5px dashed rgba(255,255,255,0.25)" }}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ border: "1px solid rgba(251,211,77,0.5)" }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FBD34D" strokeWidth={1.8} className="w-4 h-4">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <p style={{ fontFamily: PP, fontWeight: 400, color: "rgba(255,255,255,0.68)", fontSize: 12, lineHeight: 1.5 }}>
+                <strong style={{ color: "rgba(255,255,255,0.88)", fontWeight: 600 }}>National ID required</strong> before your first booking — it keeps the community safe.
+              </p>
+            </div>
           </div>
-          {mode === "signup" && (
-            <input className={inputCls} placeholder="Confirm password" type="password" />
-          )}
-        </div>
-
-        {/* Forgot password */}
-        {mode === "login" && (
-          <div className="flex justify-end -mt-1">
-            <button className="text-xs font-semibold text-[#2e4a7a] active:opacity-70">Forgot password?</button>
-          </div>
-        )}
-
-        {/* Primary CTA */}
-        <button onClick={onLogin}
-          className="w-full bg-[#2e4a7a] text-white font-bold py-3.5 rounded-2xl text-sm shadow-md active:scale-[0.98] transition-transform">
-          {mode === "login" ? "Log In" : "Create Account"}
-        </button>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-xs text-gray-400 font-medium">or</span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
-
-        {/* Guest option */}
-        <button onClick={onGuest}
-          className="w-full border-2 border-[#2e4a7a] text-[#2e4a7a] font-semibold py-3.5 rounded-2xl text-sm active:bg-[#2e4a7a]/5 transition-colors">
-          Continue as Guest
-        </button>
-
-        {/* Sign up / Log in toggle */}
-        <p className="text-center text-sm text-gray-500">
-          {mode === "login" ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={() => setMode(m => m === "login" ? "signup" : "login")}
-            className="font-bold text-[#2e4a7a] active:opacity-70">
-            {mode === "login" ? "Sign up" : "Log in"}
-          </button>
-        </p>
-
-        {/* ID verification notice */}
-        <div className="bg-[#2e4a7a]/5 border border-[#2e4a7a]/15 rounded-2xl px-4 py-3 flex items-start gap-2.5">
-          <IC.IdCard />
-          <p className="text-xs text-[#2e4a7a] leading-relaxed">
-            <strong>National ID required</strong> — You will be asked to verify your identity before making a booking. This keeps our community safe.
-          </p>
         </div>
       </div>
     </div>
@@ -2562,7 +2755,13 @@ export default function App() {
 
   const goToLogin = () => { setIsGuest(false); setPhase("login"); };
 
-  if (phase === "splash") return <SplashScreen onDone={() => setPhase("login")} />;
+  if (phase === "splash") return (
+    <>
+      <SplashScreen onDone={() => setPhase("login")} />
+      {/* Preload auth background while splash plays */}
+      <img src={phnomPenhBg} alt="" style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} />
+    </>
+  );
   if (phase === "login")  return (
     <LoginScreen
       onLogin={() => { setIsGuest(false); setPhase("app"); }}
@@ -2570,12 +2769,26 @@ export default function App() {
     />
   );
 
-  const renderContent = () => {
+  const totalBookings = bookingHistory.length;
+  const showOverlay = showSearch || !!bookingId || !!detailId || !!categoryFilter;
+  const showNav = !showOverlay;
+
+  // Crossfade style — keeps all 5 tabs mounted, transitions opacity only
+  const tabStyle = (t: Tab): React.CSSProperties => ({
+    position: "absolute", inset: 0,
+    opacity: tab === t && !showOverlay ? 1 : 0,
+    pointerEvents: tab === t && !showOverlay ? "auto" : "none",
+    transition: "opacity 0.25s ease",
+  });
+
+  const renderOverlay = () => {
     if (showSearch) return (
-      <SearchOverlay onClose={() => setShowSearch(false)} onListing={openListing} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} />
+      <div key="search" className="overlay-enter absolute inset-0">
+        <SearchOverlay onClose={() => setShowSearch(false)} onListing={openListing} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} />
+      </div>
     );
-    if (bookingId) {
-      return (
+    if (bookingId) return (
+      <div key={`booking-${bookingId}`} className="overlay-enter absolute inset-0">
         <BookingFlow
           listingId={bookingId}
           onBack={() => setBookingId(null)}
@@ -2583,30 +2796,32 @@ export default function App() {
           onDone={() => { setBookingId(null); setDetailId(null); setTab("bookings"); }}
           onGoHome={(record) => { applyBookingRecord(record); setBookingId(null); setDetailId(null); setTab("home"); }}
         />
-      );
-    }
+      </div>
+    );
     if (detailId) return (
-      <ListingDetail listingId={detailId} onBack={() => setDetailId(null)} onBook={openBooking} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} />
+      <div key={`detail-${detailId}`} className="overlay-enter absolute inset-0">
+        <ListingDetail listingId={detailId} onBack={() => setDetailId(null)} onBook={openBooking} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} onLogin={goToLogin} />
+      </div>
     );
     if (categoryFilter) return (
-      <CategoryScreen filter={categoryFilter} onBack={() => setCategoryFilter(null)} onListing={openListing} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} />
+      <div key={`cat-${categoryFilter}`} className="overlay-enter absolute inset-0">
+        <CategoryScreen filter={categoryFilter} onBack={() => setCategoryFilter(null)} onListing={openListing} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} />
+      </div>
     );
-    const totalBookings = bookingHistory.length;
-    switch (tab) {
-      case "home":      return <HomeScreen onListing={openListing} onSearch={() => setShowSearch(true)} onCategory={openCategory} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} />;
-      case "bookings":  return <BookingsScreen records={bookingHistory} onView={openListing} isGuest={isGuest} onLogin={goToLogin} />;
-      case "favorites": return <FavoritesScreen savedIds={savedIds} onListing={openListing} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} onLogin={goToLogin} />;
-      case "messages":  return <MessagesScreen autoMessages={autoMessages} />;
-      case "profile":   return <ProfileScreen points={points} bookingCount={totalBookings} isGuest={isGuest} onLogin={goToLogin} />;
-    }
+    return null;
   };
-
-  const showNav = !showSearch && !bookingId && !detailId && !categoryFilter;
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden bg-[#fbfaf7]">
-      <div className="flex-1 overflow-hidden min-h-0">
-        {renderContent()}
+      <div className="flex-1 min-h-0 relative overflow-hidden">
+        {/* All 5 tabs always mounted — crossfade via opacity only, no remount flash */}
+        <div style={tabStyle("home")}><HomeScreen onListing={openListing} onSearch={() => setShowSearch(true)} onCategory={openCategory} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} /></div>
+        <div style={tabStyle("bookings")}><BookingsScreen records={bookingHistory} onView={openListing} isGuest={isGuest} onLogin={goToLogin} /></div>
+        <div style={tabStyle("favorites")}><FavoritesScreen savedIds={savedIds} onListing={openListing} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} onLogin={goToLogin} /></div>
+        <div style={tabStyle("messages")}><MessagesScreen autoMessages={autoMessages} isGuest={isGuest} onLogin={goToLogin} /></div>
+        <div style={tabStyle("profile")}><ProfileScreen points={points} bookingCount={totalBookings} isGuest={isGuest} onLogin={goToLogin} /></div>
+        {/* Overlays slide up on top */}
+        {renderOverlay()}
       </div>
       {showNav && <BottomNav active={tab} onChange={handleNavChange} />}
     </div>
