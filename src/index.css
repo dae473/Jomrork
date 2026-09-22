@@ -1,61 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
-/* ── Global scrollbar removal ─────────────────────────────── */
-*,
-*::before,
-*::after {
+/* ── Reset ────────────────────────────────────────────────── */
+*, *::before, *::after {
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
 }
-*::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ── Base ─────────────────────────────────────────────────── */
-html, body {
+html, body, #root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 body {
   font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
   overscroll-behavior: none;
-  background: #0f1923;
+  background: #e8e8e8;
 }
 
-/* Mobile: full-screen app */
-#root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* Tablet & desktop: centered phone shell */
+/* ── Desktop wrapper: centered phone shell ────────────────── */
 @media (min-width: 640px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(145deg, #0a1520 0%, #132030 40%, #1a2e44 100%);
+    background: linear-gradient(145deg, #0a1520 0%, #132030 45%, #1c3550 100%);
   }
 
-  /* Subtle grid pattern on the desktop bg */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(23,58,94,0.18) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(23,58,94,0.18) 1px, transparent 1px);
-    background-size: 40px 40px;
+      linear-gradient(rgba(23,58,94,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23,58,94,0.15) 1px, transparent 1px);
+    background-size: 44px 44px;
     pointer-events: none;
     z-index: 0;
   }
@@ -64,29 +51,35 @@ body {
     position: relative;
     z-index: 1;
     width: 393px;
-    height: min(852px, 95vh);
+    height: min(852px, 96vh);
     border-radius: 44px;
     overflow: hidden;
     box-shadow:
-      0 0 0 10px #1a1a1a,
-      0 0 0 12px #2a2a2a,
-      0 40px 100px rgba(0,0,0,0.7),
-      0 8px 30px rgba(0,0,0,0.5);
+      0 0 0 10px #1c1c1e,
+      0 0 0 12px #3a3a3c,
+      0 50px 120px rgba(0,0,0,0.75),
+      0 10px 40px rgba(0,0,0,0.4);
   }
 }
 
-/* Large desktop: slightly bigger shell */
 @media (min-width: 1024px) {
   #root {
-    width: 420px;
-    height: min(900px, 95vh);
+    width: 430px;
+    height: min(932px, 96vh);
   }
 }
 
-/* ── Font utility classes — all Poppins ──────────────────── */
-.brand-font   { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; }
-.heading-font { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; }
-.body-font    { font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 400; }
+@media (min-width: 1440px) {
+  #root {
+    width: 430px;
+    height: min(932px, 96vh);
+  }
+}
+
+/* ── Font classes ─────────────────────────────────────────── */
+.brand-font   { font-family: 'Poppins', sans-serif; font-weight: 800; }
+.heading-font { font-family: 'Poppins', sans-serif; font-weight: 600; }
+.body-font    { font-family: 'Poppins', sans-serif; font-weight: 400; }
 
 /* ── Brand tokens ─────────────────────────────────────────── */
 :root {
@@ -111,21 +104,11 @@ body {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(28px); }
-  to   { opacity: 1; transform: translateX(0); }
+@keyframes overlayIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-28px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.94); }
-  to   { opacity: 1; transform: scale(1); }
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin  { to { transform: rotate(360deg); } }
 @keyframes bounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50%       { transform: translateY(-6px); opacity: 1; }
@@ -134,39 +117,22 @@ body {
   0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.15; }
   100% { transform: translate(-50%,-50%) scale(1.6); opacity: 0; }
 }
-@keyframes shimmer {
-  from { background-position: -200% center; }
-  to   { background-position: 200% center; }
-}
 @keyframes navDot {
   from { transform: scaleX(0); opacity: 0; }
   to   { transform: scaleX(1); opacity: 1; }
 }
 
-/* ── Animation utility classes ────────────────────────────── */
-.fade-in        { animation: fadeIn 0.30s ease both; }
-.fade-in-fast   { animation: fadeIn 0.18s ease both; }
-.slide-up       { animation: slideUp 0.38s var(--ease-out-expo) both; }
-.slide-in-right { animation: slideInRight 0.32s var(--ease-out-expo) both; }
-.slide-in-left  { animation: slideInLeft 0.32s var(--ease-out-expo) both; }
-.scale-in       { animation: scaleIn 0.28s var(--ease-spring) both; }
+/* ── Animation utilities ──────────────────────────────────── */
+.fade-in      { animation: fadeIn 0.30s ease both; }
+.fade-in-fast { animation: fadeIn 0.18s ease both; }
+.slide-up     { animation: slideUp 0.38s var(--ease-out-expo) both; }
+.scale-in     { animation: scaleIn 0.28s var(--ease-spring) both; }
 
-/* ── Screen transition wrapper ────────────────────────────── */
-.screen-enter {
-  animation: fadeIn 0.22s ease both;
-}
-.screen-enter-slide {
-  animation: fadeIn 0.22s ease both;
-}
-.overlay-enter {
-  animation: overlayIn 0.28s var(--ease-out-expo) both;
-}
-@keyframes overlayIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.screen-enter       { animation: fadeIn 0.22s ease both; }
+.screen-enter-slide { animation: fadeIn 0.22s ease both; }
+.overlay-enter      { animation: overlayIn 0.28s var(--ease-out-expo) both; }
 
-/* ── Staggered list children ──────────────────────────────── */
+/* ── Staggered list ───────────────────────────────────────── */
 .stagger-list > * {
   opacity: 0;
   animation: fadeIn 0.28s ease both;
@@ -182,47 +148,29 @@ body {
 .stagger-list > *:nth-child(9)  { animation-delay: 0.36s; }
 .stagger-list > *:nth-child(10) { animation-delay: 0.40s; }
 
-/* ── Card press / hover feel ──────────────────────────────── */
+/* ── Listing responsive grid ──────────────────────────────── */
+.listing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* ── Card interactions ────────────────────────────────────── */
 .card-press {
   transition: transform 0.15s var(--ease-spring), box-shadow 0.15s ease;
   cursor: pointer;
 }
-.card-press:active {
-  transform: scale(0.975);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
+.card-press:active { transform: scale(0.975); }
 
-/* ── Button base transitions ──────────────────────────────── */
 button, a {
   transition: opacity 0.15s ease, transform 0.15s var(--ease-spring);
 }
 
-/* ── Bottom nav active dot ────────────────────────────────── */
-.nav-dot {
-  display: block;
-  width: 18px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--navy);
-  transform-origin: center;
-  animation: navDot 0.28s var(--ease-spring) both;
-}
+/* ── Scroll ───────────────────────────────────────────────── */
+.scroll-smooth-touch { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
 
-/* ── Skeleton shimmer ──────────────────────────────────────── */
-.shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-}
-
-/* ── Smooth scroll areas ───────────────────────────────────── */
-.scroll-smooth-touch {
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-}
-
-/* ── Range input ──────────────────────────────────────────── */
+/* ── Range ────────────────────────────────────────────────── */
 input[type="range"] { accent-color: #173A5E; cursor: pointer; }
 
-/* ── Map iframe border reset ──────────────────────────────── */
+/* ── Map ──────────────────────────────────────────────────── */
 iframe { border: 0; display: block; }

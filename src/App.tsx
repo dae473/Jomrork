@@ -2502,6 +2502,56 @@ function ProfileScreen({ points, bookingCount, isGuest, onLogin }: {
 // ─── BOTTOM NAV ───────────────────────────────────────────────────────────────
 type Tab = "home" | "bookings" | "favorites" | "messages" | "profile";
 
+// ─── SIDE NAV (tablet / desktop) ─────────────────────────────────────────────
+function SideNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
+  const tabs: { id: Tab; Icon: (on: boolean) => React.ReactElement; label: string }[] = [
+    { id:"home",      Icon: on => <IC.Home on={on} />,     label:"Home" },
+    { id:"bookings",  Icon: on => <IC.Calendar on={on} />, label:"Bookings" },
+    { id:"favorites", Icon: on => <IC.Heart on={on} />,    label:"Saved" },
+    { id:"messages",  Icon: on => <IC.Msg on={on} />,      label:"Messages" },
+    { id:"profile",   Icon: on => <IC.User on={on} />,     label:"Profile" },
+  ];
+  return (
+    <div className="hidden sm:flex flex-col shrink-0 h-full"
+      style={{ width: 72, background: "#173A5E", borderRight: "1px solid rgba(255,255,255,0.08)" }}>
+      {/* Logo */}
+      <div className="flex items-center justify-center py-6 shrink-0">
+        <JomrorkIcon size={36} glow />
+      </div>
+      {/* Nav items */}
+      <div className="flex flex-col gap-1 px-2 flex-1">
+        {tabs.map(t => {
+          const isActive = active === t.id;
+          return (
+            <button key={t.id} onClick={() => onChange(t.id)}
+              style={{ transition: "background 0.18s ease" }}
+              className={`flex flex-col items-center gap-1 py-3 px-1 rounded-2xl ${isActive ? "bg-white/18" : "hover:bg-white/8 active:bg-white/15"}`}>
+              <div style={{ filter: isActive ? "none" : "opacity(0.55)" }}>
+                {/* Render icon in white for sidebar */}
+                <svg viewBox="0 0 24 24" fill={isActive ? "rgba(255,255,255,0.95)" : "none"}
+                  stroke={isActive ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.6)"}
+                  strokeWidth={1.8} className="w-5 h-5">
+                  {t.id === "home"      && <><path d="M3 12L12 3l9 9" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" strokeLinecap="round" strokeLinejoin="round"/></>}
+                  {t.id === "bookings"  && <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" strokeLinecap="round"/><line x1="8" y1="2" x2="8" y2="6" strokeLinecap="round"/><line x1="3" y1="10" x2="21" y2="10"/></>}
+                  {t.id === "favorites" && <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" strokeLinecap="round"/>}
+                  {t.id === "messages"  && <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round"/>}
+                  {t.id === "profile"   && <><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeLinecap="round"/><circle cx="12" cy="7" r="4"/></>}
+                </svg>
+              </div>
+              <span style={{ fontFamily: PP, fontWeight: isActive ? 600 : 400, fontSize: 8.5,
+                color: isActive ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.5)" }}>
+                {t.label}
+              </span>
+              {isActive && <div style={{ width: 16, height: 2.5, borderRadius: 2, background: "#FBD34D", marginTop: 1 }} />}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── BOTTOM NAV (mobile only) ─────────────────────────────────────────────────
 function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
   const tabs: { id: Tab; Icon: (on: boolean) => React.ReactElement; label: string }[] = [
     { id:"home",     Icon: on => <IC.Home on={on} />,     label:"Home" },
@@ -2812,18 +2862,29 @@ export default function App() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden bg-[#fbfaf7]">
-      <div className="flex-1 min-h-0 relative overflow-hidden">
-        {/* All 5 tabs always mounted — crossfade via opacity only, no remount flash */}
-        <div style={tabStyle("home")}><HomeScreen onListing={openListing} onSearch={() => setShowSearch(true)} onCategory={openCategory} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} /></div>
-        <div style={tabStyle("bookings")}><BookingsScreen records={bookingHistory} onView={openListing} isGuest={isGuest} onLogin={goToLogin} /></div>
-        <div style={tabStyle("favorites")}><FavoritesScreen savedIds={savedIds} onListing={openListing} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} onLogin={goToLogin} /></div>
-        <div style={tabStyle("messages")}><MessagesScreen autoMessages={autoMessages} isGuest={isGuest} onLogin={goToLogin} /></div>
-        <div style={tabStyle("profile")}><ProfileScreen points={points} bookingCount={totalBookings} isGuest={isGuest} onLogin={goToLogin} /></div>
-        {/* Overlays slide up on top */}
-        {renderOverlay()}
+    <div className="w-full h-full flex overflow-hidden bg-[#fbfaf7]">
+      {/* Sidebar — tablet & desktop only (hidden on mobile via CSS) */}
+      {showNav && <SideNav active={tab} onChange={handleNavChange} />}
+
+      {/* Main content column */}
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 relative overflow-hidden">
+          {/* All 5 tabs always mounted — crossfade via opacity only */}
+          <div style={tabStyle("home")}><HomeScreen onListing={openListing} onSearch={() => setShowSearch(true)} onCategory={openCategory} savedIds={savedIds} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} /></div>
+          <div style={tabStyle("bookings")}><BookingsScreen records={bookingHistory} onView={openListing} isGuest={isGuest} onLogin={goToLogin} /></div>
+          <div style={tabStyle("favorites")}><FavoritesScreen savedIds={savedIds} onListing={openListing} onSave={toggleSave} bookedByUser={bookedByUser} isGuest={isGuest} onLogin={goToLogin} /></div>
+          <div style={tabStyle("messages")}><MessagesScreen autoMessages={autoMessages} isGuest={isGuest} onLogin={goToLogin} /></div>
+          <div style={tabStyle("profile")}><ProfileScreen points={points} bookingCount={totalBookings} isGuest={isGuest} onLogin={goToLogin} /></div>
+          {/* Overlays */}
+          {renderOverlay()}
+        </div>
+        {/* Bottom nav — mobile only */}
+        {showNav && (
+          <div className="sm:hidden">
+            <BottomNav active={tab} onChange={handleNavChange} />
+          </div>
+        )}
       </div>
-      {showNav && <BottomNav active={tab} onChange={handleNavChange} />}
     </div>
   );
 }
